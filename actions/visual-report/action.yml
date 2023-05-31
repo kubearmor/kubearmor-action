@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Authors of KubeArmor
+
+name: 'system and network visualisation report'
+description: 'system and network visualisation report'
+runs:
+  using: composite
+  steps:
+    # system and network visualisation report
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    - name: Install graphviz
+      run: |
+        sudo apt-get install -y graphviz
+      shell: bash
+    - name: Visulisation
+      run: |
+        echo ${PWD} && make build-visual-cli
+        ./visual system -f updated.json --app $APP_NAME -o app_sys_${{ github.event.head_commit.id }}.png
+        ./visual network --old baseline.json --new updated.json --app $APP_NAME -o app_network_${{ github.event.head_commit.id }}.png
+      shell: bash
+    - name: Upload Image
+      id: app_visulisation
+      uses: actions/upload-artifact@v2
+      with:
+        name: app_visulisation
+        path: |
+          app_sys_${{ github.event.head_commit.id }}.png
+          app_network_${{ github.event.head_commit.id }}.png
+    

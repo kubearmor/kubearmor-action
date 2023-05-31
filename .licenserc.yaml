@@ -1,0 +1,22 @@
+header:
+  license:
+    spdx-id: Apache-2.0
+    copyright-owner: KubeArmor
+    content: |
+      SPDX-License-Identifier: Apache-2.0
+
+  paths:
+    - "**/*.go"
+    - "**/*.sh"
+    - "**/*.js"
+    - "**/Dockerfile"
+
+  paths-ignore:
+    - ".github/**/*"
+    - "vendor/**/*"
+
+  comment: on-failure
+
+dependency:
+  files:
+    - go.mod
