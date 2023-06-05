@@ -13,7 +13,7 @@ jobs:
         run: |
           sudo apt-get install -y socat
       - name: Setup a Kubernetes environment
-        run: ./.github/workflows/install-k3s.sh
+        run: ./hack/install-k3s.sh
       - name: Test connectivity
         run: kubectl get no
       - name: install karmor
