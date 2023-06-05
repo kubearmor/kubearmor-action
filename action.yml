@@ -1,13 +1,19 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Authors of KubeArmor
 
-name: 'Hello World'
+name: 'kubearmor-action'
 description: 'kubearmor-action'
-# inputs:
-#   who-to-greet:  # id of input
-#     description: 'Who to greet'
-#     required: true
-#     default: 'World'
+inputs:
+  old-app-image-name:  # old app docker image name
+    description: 'Old app docker image name'
+    required: true
+  new-app-image-name:  # new app docker image name
+    description: 'New app docker image name'
+    required: true
+  filepath: # file path to store baseline and updated file
+    description: 'File path to store baseline and updated file'
+    required: flase
+    default: '/tmp'
 # outputs:
 #   time: # id of output
 #     description: 'The time we greeted you'
@@ -22,8 +28,35 @@ runs:
     - name: Setup Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18
+        go-version: 1.20
+    # Install kubearmor
+    - name: Install kubearmor
+      uses: zhy76/kubearmor-action/actions/install-kubearmor@dev
+    # # Deploy old app
+    # - name: Deploy old app
+    #   run: kubectl apply -f ./pod.yaml
+    # - name: create baseline
+    #   run: |
+    #     sleep 150
+    #     kubectl get po -A
+    #     karmor summary -p nginx > /tmp/baseline
+    #     cat /tmp/baseline
+    # # Deploy new 
+    # - name: Deploy new app
+    #   run: kubectl apply -f ./pod1.yaml
+    # - name: create updated
+    #   run: |
+    #     sleep 150
+    #     kubectl get po -A
+    #     karmor summary -p nginx1 > /tmp/updated
+    #     cat /tmp/updated
+    # Excuting the main logic of kubearmor-action by invoke binary file
     - name: Execute
       run: node ${{ github.action_path }}/invoke-binary.js
+      env:
+        # pass inputs to env FYI: https://github.com/actions/runner/issues/665
+        INPUT_OLD-APP-IMAGE-NAME: ${{ inputs.old-app-image-name }}
+        INPUT_NEW-APP-IMAGE-NAME: ${{ inputs.new-app-image-name }}
+        INPUT_FILEPATH: ${{ inputs.filepath }}
       shell: bash
 
