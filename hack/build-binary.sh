@@ -10,7 +10,7 @@ PLATFORMS="linux/amd64 linux/arm64 windows/amd64 windows/arm64"
 OUTPUT_DIR="../_output/bin"
 
 # Define the version to use
-VERSION=$(git rev-parse HEAD)
+VERSION="latest"
 
 # Update the output directory
 rm -rf $OUTPUT_DIR
