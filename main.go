@@ -3,8 +3,23 @@
 
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/sethvargo/go-githubactions"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	action := githubactions.New()
+	oldAppName := action.GetInput("old-app-image-name")
+	if oldAppName == "" {
+		action.Fatalf("old-app-image-name cannot be empty")
+	}
+	newAppName := action.GetInput("new-app-image-name")
+	if newAppName == "" {
+		action.Fatalf("new-app-image-name cannot be empty")
+	}
+	filepath := action.GetInput("filepath")
+
+	fmt.Printf("oldAppName: %v, newAppName: %v, filepath: %v", oldAppName, newAppName, filepath)
 }

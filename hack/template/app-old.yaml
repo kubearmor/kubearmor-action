@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Authors of KubeArmor
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-old
+spec:
+  containers:
+    - name: app-old
+      image: ${old-app-image-name}

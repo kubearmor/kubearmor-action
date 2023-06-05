@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Authors of KubeArmor
+
+name: 'install kubearmor'
+description: 'install kubearmor'
+runs:
+  using: composite
+  steps:
+    # Install kubearmor     
+    - name: Download required dependencies
+      run: sudo apt-get install -y socat
+      shell: bash
+    - name: Setup a Kubernetes environment
+      run: ./hack/install-k3s.sh
+      shell: bash
+    - name: Test connectivity
+      run: kubectl get no
+      shell: bash
+    - name: Install karmor
+      run: curl -sfL http://get.kubearmor.io/ | sudo sh -s -- -b /usr/local/bin && karmor install
+      shell: bash
+    - name: Install Discovery-engine
+      run: kubectl apply -f https://raw.githubusercontent.com/kubearmor/discovery-engine/dev/deployments/k8s/deployment.yaml
+      shell: bash
