@@ -1,3 +1,5 @@
+name: install-kubearmor
+
 on:
   push:
     branches: [main]

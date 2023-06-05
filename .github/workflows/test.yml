@@ -1,0 +1,16 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: A job to test
+    steps:
+      - name: kubearmor-action step
+        id: test
+        uses: zhy76/kubearmor-action@dev
