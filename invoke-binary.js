@@ -7,23 +7,28 @@ const childProcess = require('child_process')
 const os = require('os')
 const process = require('process')
 
-const VERSION = 'e9d351bd367300ec85b9ba777812c42be2570a64'
+// Get current git commit hash
+const VERSION = childProcess.execSync('git rev-parse HEAD').toString().trim()
 
+// Output directory
+const OUTPUT_DIR = `${__dirname}/_output/bin`
+
+// Choose binary based on platform and architecture
 function chooseBinary() {
     const platform = os.platform()
     const arch = os.arch()
 
-    if (platform === 'linux' && arch === 'x64') {
-        return `main-linux-amd64-${VERSION}`
+    if (platform === 'linux' && arch === 'amd64') {
+        return `linux-amd64-${VERSION}`
     }
     if (platform === 'linux' && arch === 'arm64') {
-        return `main-linux-arm64-${VERSION}`
+        return `linux-arm64-${VERSION}`
     }
-    if (platform === 'windows' && arch === 'x64') {
-        return `main-windows-amd64-${VERSION}`
+    if (platform === 'windows' && arch === 'amd64') {
+        return `windows-amd64-${VERSION}`
     }
     if (platform === 'windows' && arch === 'arm64') {
-        return `main-windows-arm64-${VERSION}`
+        return `windows-arm64-${VERSION}`
     }
 
     console.error(`Unsupported platform (${platform}) and architecture (${arch})`)
@@ -32,7 +37,7 @@ function chooseBinary() {
 
 function main() {
     const binary = chooseBinary()
-    const mainScript = `${__dirname}/${binary}`
+    const mainScript = `${OUTPUT_DIR}/${binary}`
     const spawnSyncReturns = childProcess.spawnSync(mainScript, { stdio: 'inherit' })
     const status = spawnSyncReturns.status
     if (typeof status === 'number') {

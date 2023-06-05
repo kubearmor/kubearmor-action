@@ -1,13 +1,6 @@
 CURDIR          := $(shell pwd)
 GO_EXEC         := $(shell which go)
-LOGNAME         := $(shell logname)
-KUBEARMOR_PID    = $(shell pgrep kubearmor)
 Dirs			 = $(shell ls)
-
-ifeq (, $(shell which govvv))
-$(shell go install github.com/ahmetb/govvv)	# This works for older go version
-$(shell go install github.com/ahmetb/govvv@latest) # This works for new go version
-endif
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifneq (,$(shell go env GOBIN))
@@ -15,8 +8,6 @@ GOBIN=$(shell go env GOPATH)/bin
 else
 GOBIN=$(shell go env GOBIN)
 endif
-
-GIT_INFO := $(shell govvv -flags)
 
 .PHONY: gofmt
 ## gofmt: Run gofmt linter
@@ -57,10 +48,10 @@ else
 ADDLICENSE_BIN=$(shell which addlicense)
 endif
 
-.PHONY: filelicense
-filelicense: SHELL:=/bin/bash
-## filelicense: add license
-filelicense:
+.PHONY: addlicense
+addlicense: SHELL:=/bin/bash
+## addlicense: add license
+addlicense:
 	for file in ${Dirs} ; do \
 		if [[  $$file != '_output' && $$file != 'docs' && $$file != 'vendor' && $$file != 'logger' && $$file != 'applications' ]]; then \
 			$(ADDLICENSE_BIN)  -y $(shell date +"%Y") -c "Authors of KubeArmor" -f hack/LICENSE_TEMPLATE ./$$file ; \
@@ -68,6 +59,7 @@ filelicense:
     done
 
 .PHONY: gosec
+
 ## gosec: Run gosec linter
 gosec:
 ifeq (, $(shell which gosec))
@@ -89,6 +81,11 @@ scan:
 	go install golang.org/x/vuln/cmd/govulncheck@latest ;\
 	cd $(CURDIR);\
 	govulncheck -v ./... ;\
+
+.PHONY: build
+## build: Build kubearmor-action on different OS
+build:
+	cd $(CURDIR)/hack; ./build-binary.sh
 
 ## help: Display help information
 help: Makefile

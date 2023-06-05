@@ -8,6 +8,7 @@ header:
   paths:
     - "**/*.go"
     - "**/*.sh"
+    - "**/*.js"
     - "**/Dockerfile"
 
   paths-ignore:
