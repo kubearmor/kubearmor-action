@@ -7,8 +7,8 @@ const childProcess = require('child_process')
 const os = require('os')
 const process = require('process')
 
-// Get current git commit hash
-const VERSION = childProcess.execSync('git rev-parse HEAD').toString().trim()
+// Define version
+const VERSION = "latest"
 
 // Output directory
 const OUTPUT_DIR = `${__dirname}/_output/bin`
@@ -18,13 +18,13 @@ function chooseBinary() {
     const platform = os.platform()
     const arch = os.arch()
 
-    if (platform === 'linux' && arch === 'amd64') {
+    if (platform === 'linux' && arch === 'x64') {
         return `linux-amd64-${VERSION}`
     }
     if (platform === 'linux' && arch === 'arm64') {
         return `linux-arm64-${VERSION}`
     }
-    if (platform === 'windows' && arch === 'amd64') {
+    if (platform === 'windows' && arch === 'x64') {
         return `windows-amd64-${VERSION}`
     }
     if (platform === 'windows' && arch === 'arm64') {

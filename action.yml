@@ -1,5 +1,29 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Authors of KubeArmor
 
-
+name: 'Hello World'
+description: 'kubearmor-action'
+# inputs:
+#   who-to-greet:  # id of input
+#     description: 'Who to greet'
+#     required: true
+#     default: 'World'
+# outputs:
+#   time: # id of output
+#     description: 'The time we greeted you'
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        repository: zhy76/kubearmor-action
+        ref: dev
+    - name: Setup Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.18
+    - name: Execute
+      run: node ${{ github.action_path }}/invoke-binary.js
+      shell: bash
 
