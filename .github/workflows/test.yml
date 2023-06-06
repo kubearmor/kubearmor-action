@@ -14,5 +14,6 @@ jobs:
       - name: kubearmor-action test
         uses: zhy76/kubearmor-action@dev
         with:
-          old-app-image-name: 'old-app'
-          new-app-image-name: 'new-app'
+          old-app-image-name: 'nginx:1.22.1'
+          new-app-image-name: 'nginx:1.23'
+
