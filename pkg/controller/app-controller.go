@@ -5,11 +5,8 @@ package controller
 
 import (
 	"context"
-	"fmt"
 	"kubearmor-action/common"
 	"kubearmor-action/pkg/controller/client"
-	"kubearmor-action/pkg/utils"
-	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -47,24 +44,5 @@ func (app *App) Delete(c *client.Client) error {
 	if err != nil {
 		return err
 	}
-	return err
-}
-
-func (app *App) WaitAllAppRunning(c *client.Client) error {
-	time.Sleep(30 * time.Second)
-	err := utils.Retry(10, 5*time.Second, func() error {
-		flag, err := c.CheckAllPodsReadyUnderNamespace(common.AppNamespace)
-		if err != nil {
-			return err
-		}
-		if !flag {
-			err = c.OutputNotReadyPodInfo()
-			if err != nil {
-				return err
-			}
-			return fmt.Errorf("app not ready")
-		}
-		return nil
-	})
 	return err
 }

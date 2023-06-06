@@ -9,7 +9,9 @@ import (
 	"fmt"
 	"io"
 	"kubearmor-action/common"
+	"kubearmor-action/pkg/utils"
 	"path/filepath"
+	"time"
 
 	"github.com/pkg/errors"
 	v1 "k8s.io/api/core/v1"
@@ -134,23 +136,29 @@ func (c *Client) ListAllNamespacesPods() ([]*NamespacePod, error) {
 	return namespacePodList, nil
 }
 
-// Check if all pods of a specific namespace are ready
-func (c *Client) CheckAllPodsReadyUnderNamespace(namespace string) (bool, error) {
-	pods, err := c.ClientSet.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{})
+// Check if all pods are ready
+func (c *Client) CheckAllPodsReady() (bool, error) {
+	namespacePodList, err := c.ListAllNamespacesPods()
 	if err != nil {
-		return false, errors.Wrapf(err, "failed to get namespace:%s pods", namespace)
+		return false, err
 	}
-	// pods.Items maybe nil
-	if len(pods.Items) == 0 {
-		return false, nil
-	}
-	for _, pod := range pods.Items {
-		// pod.Status.ContainerStatus == nil because of pod contain initcontainer
-		if len(pod.Status.ContainerStatuses) == 0 {
+	for _, namespacePod := range namespacePodList {
+		if namespacePod.PodList == nil {
 			continue
 		}
-		if !pod.Status.ContainerStatuses[0].Ready {
-			return false, nil
+		// pods.Items maybe nil
+		if len(namespacePod.PodList.Items) == 0 {
+			continue
+		}
+		for _, pod := range namespacePod.PodList.Items {
+			// pod.Status.ContainerStatus == nil because of pod contain initcontainer
+			if len(pod.Status.ContainerStatuses) == 0 {
+				continue
+			}
+			if !pod.Status.ContainerStatuses[0].Ready {
+				fmt.Printf("pod %s is not ready\n", pod.Name)
+				return false, nil
+			}
 		}
 	}
 	return true, nil
@@ -262,4 +270,23 @@ func (c *Client) OutputNotReadyPodInfo() error {
 		fmt.Println("=========================================================================================================================================")
 	}
 	return nil
+}
+
+func (c *Client) WaitAllPodRunning() error {
+	time.Sleep(30 * time.Second)
+	err := utils.Retry(10, 5*time.Second, func() error {
+		flag, err := c.CheckAllPodsReady()
+		if err != nil {
+			return err
+		}
+		if !flag {
+			err = c.OutputNotReadyPodInfo()
+			if err != nil {
+				return err
+			}
+			return fmt.Errorf("pods not ready")
+		}
+		return nil
+	})
+	return err
 }

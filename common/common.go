@@ -4,6 +4,7 @@
 package common
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/mitchellh/go-homedir"
@@ -15,6 +16,15 @@ const (
 	OldAppImagePlaceholderName = "old-app-image-name-placeholder" // The old app image placeholder name to be changed
 	NewAppImagePlaceholderName = "new-app-image-name-placeholder" // The new app image placeholder name to be changed
 	AppNamespace               = "app"                            // Namespace is the default namespace of the app
+)
+
+const (
+	ROOT = "root"
+)
+
+var (
+	StdOut = os.Stdout
+	StdErr = os.Stderr
 )
 
 func DefaultKubeConfigDir() string {

@@ -9,6 +9,10 @@ else
 GOBIN=$(shell go env GOBIN)
 endif
 
+.PHONY: all
+## all: Run all commands
+all: gofmt golint install-addlicense addlicense gosec scan build
+
 .PHONY: gofmt
 ## gofmt: Run gofmt linter
 gofmt:
