@@ -14,9 +14,6 @@ inputs:
     description: 'File path to store baseline and updated file'
     required: flase
     default: '/tmp'
-# outputs:
-#   time: # id of output
-#     description: 'The time we greeted you'
 runs:
   using: composite
   steps:
@@ -34,22 +31,22 @@ runs:
       uses: zhy76/kubearmor-action/actions/install-kubearmor@dev
     # # Deploy old app
     # - name: Deploy old app
-    #   run: kubectl apply -f ./pod.yaml
-    # - name: create baseline
+    #   run: kubectl apply -f ./template/app-old.yaml
+    # - name: create baseline file
     #   run: |
     #     sleep 150
     #     kubectl get po -A
-    #     karmor summary -p nginx > /tmp/baseline
-    #     cat /tmp/baseline
-    # # Deploy new 
+    #     karmor summary -p app-old > /${{ inputs.filepath }}/baseline
+    #     cat /${{ inputs.filepath }}/baseline
+    # # Deploy new app
     # - name: Deploy new app
-    #   run: kubectl apply -f ./pod1.yaml
-    # - name: create updated
+    #   run: kubectl apply -f ./template/app-new.yaml
+    # - name: create updated file
     #   run: |
     #     sleep 150
     #     kubectl get po -A
-    #     karmor summary -p nginx1 > /tmp/updated
-    #     cat /tmp/updated
+    #     karmor summary -p app-new > /${{ inputs.filepath }}/updated
+    #     cat /${{ inputs.filepath }}/updated
     # Excuting the main logic of kubearmor-action by invoke binary file
     - name: Execute
       run: node ${{ github.action_path }}/invoke-binary.js
@@ -58,5 +55,8 @@ runs:
         INPUT_OLD-APP-IMAGE-NAME: ${{ inputs.old-app-image-name }}
         INPUT_NEW-APP-IMAGE-NAME: ${{ inputs.new-app-image-name }}
         INPUT_FILEPATH: ${{ inputs.filepath }}
+      shell: 
+    - name: get pod
+      run: kubectl get po -A
       shell: bash
 
