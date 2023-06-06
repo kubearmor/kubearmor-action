@@ -5,7 +5,8 @@ package utils
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
+
 	"strings"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -26,7 +27,7 @@ func NewFileHelper(filePath string) *FileHelper {
 // ReplaceImageName replaces the image name in the specified file
 func (f *FileHelper) ReplaceImageName(imagePlaceholderName, targetImageName string) (*unstructured.Unstructured, error) {
 	// Read the file content
-	data, err := ioutil.ReadFile(f.filePath)
+	data, err := os.ReadFile(f.filePath)
 	if err != nil {
 		return &unstructured.Unstructured{}, fmt.Errorf("failed to read file: %w", err)
 	}

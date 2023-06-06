@@ -39,8 +39,13 @@ func main() {
 		action.Fatalf("failed to create namespace: %v", err)
 		return
 	}
-	defer client.DeleteNamespace(common.AppNamespace)
-
+	defer func() {
+		err := client.DeleteNamespace(common.AppNamespace)
+		if err != nil {
+			action.Fatalf("failed to delete namespace: %v", err)
+			return
+		}
+	}()
 	// 2. Deploy the old app
 	// Create fileHelper
 	oldAppFilehelper := utils.NewFileHelper(common.OldAppTemplateFilePath)
