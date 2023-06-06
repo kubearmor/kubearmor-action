@@ -4,13 +4,17 @@
 package main
 
 import (
-	"fmt"
+	"kubearmor-action/common"
+	ctrl "kubearmor-action/pkg/controller"
+	"kubearmor-action/pkg/controller/client"
+	"kubearmor-action/pkg/utils"
 
 	"github.com/sethvargo/go-githubactions"
 )
 
 func main() {
 	action := githubactions.New()
+	// 1. Get the inputs
 	oldAppName := action.GetInput("old-app-image-name")
 	if oldAppName == "" {
 		action.Fatalf("old-app-image-name cannot be empty")
@@ -21,5 +25,88 @@ func main() {
 	}
 	filepath := action.GetInput("filepath")
 
-	fmt.Printf("oldAppName: %v, newAppName: %v, filepath: %v", oldAppName, newAppName, filepath)
+	action.Infof("oldAppName: %v, newAppName: %v, filepath: %v", oldAppName, newAppName, filepath)
+
+	// Create the k8s client
+	client, err := client.NewK8sClient()
+	if err != nil {
+		action.Fatalf("failed to create k8s client: %v", err)
+		return
+	}
+	// Create the app namespace
+	err = client.CreateNamespace(common.AppNamespace)
+	if err != nil {
+		action.Fatalf("failed to create namespace: %v", err)
+		return
+	}
+	defer client.DeleteNamespace(common.AppNamespace)
+
+	// 2. Deploy the old app
+	// Create fileHelper
+	oldAppFilehelper := utils.NewFileHelper(common.OldAppTemplateFilePath)
+	// Replace the old app image name
+	oldAppObj, err := oldAppFilehelper.ReplaceImageName(common.OldAppImagePlaceholderName, oldAppName)
+	if err != nil {
+		action.Fatalf("failed to replace image name: %v", err)
+		return
+	}
+	action.Infof("old-app: %v", oldAppObj)
+	// Create the old app controller
+	oldAppCtrl := ctrl.NewApp(oldAppObj)
+	// Create old app
+	err = oldAppCtrl.Create(client)
+	if err != nil {
+		action.Fatalf("failed to create app: %v", err)
+		return
+	}
+	action.Infof("Create old app successfully!")
+	// Wait for the old app to be running
+	action.Infof("Wait for the old app to be running...")
+	err = oldAppCtrl.WaitAllAppRunning(client)
+	if err != nil {
+		action.Fatalf("failed to wait for the old app to be running: %v", err)
+		return
+	}
+	// Delete the old app
+	err = oldAppCtrl.Delete(client)
+	if err != nil {
+		action.Fatalf("failed to delete app: %v", err)
+		return
+	}
+
+	// 3. Save the old app's baseline file
+
+	// 4. Deploy the new app
+	// Create fileHelper
+	newAppFilehelper := utils.NewFileHelper(common.NewAppTemplateFilePath)
+	// Replace the new app image name
+	newAppObj, err := newAppFilehelper.ReplaceImageName(common.NewAppImagePlaceholderName, newAppName)
+	if err != nil {
+		action.Fatalf("failed to replace image name: %v", err)
+		return
+	}
+	action.Infof("new-app: %v", newAppObj)
+	// Create the new app controller
+	newAppCtrl := ctrl.NewApp(newAppObj)
+	// Create new app
+	err = newAppCtrl.Create(client)
+	if err != nil {
+		action.Fatalf("failed to create app: %v", err)
+		return
+	}
+	action.Infof("Create new app successfully!")
+	// Wait for the new app to be running
+	action.Infof("Wait for the new app to be running...")
+	err = newAppCtrl.WaitAllAppRunning(client)
+	if err != nil {
+		action.Fatalf("failed to wait for the new app to be running: %v", err)
+		return
+	}
+	// Delete the new app
+	err = newAppCtrl.Delete(client)
+	if err != nil {
+		action.Fatalf("failed to delete app: %v", err)
+		return
+	}
+	// 5. Save the new app's updated file
 }
