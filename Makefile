@@ -12,7 +12,7 @@ endif
 .PHONY: gofmt
 ## gofmt: Run gofmt linter
 gofmt:
-	cd $(CURDIR); gofmt -s -w -d $(shell find . -type f -name '*.go' -print)
+	cd $(CURDIR); go fmt ./...
 
 .PHONY: golint
 ## golint: Run golint linter
