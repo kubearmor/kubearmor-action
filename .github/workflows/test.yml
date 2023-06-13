@@ -7,12 +7,12 @@ on:
     branches: [main]
 
 jobs:
-  hello_world_job:
+  test_job:
     runs-on: ubuntu-latest
     name: A job to test kubearmor-action
     steps:
       - name: kubearmor-action test
-        uses: zhy76/kubearmor-action@dev
+        uses: kubearmor/kubearmor-action@dev
         with:
           old-app-image-name: 'nginx:1.22.1'
           new-app-image-name: 'nginx:1.23'

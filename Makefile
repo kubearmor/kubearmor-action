@@ -80,7 +80,7 @@ endif
 	cd $(CURDIR); gosec ./...
 
 .PHONY: scan
-## scan: Run gosec linter
+## scan: Run scan linter
 scan: 
 	go install golang.org/x/vuln/cmd/govulncheck@latest ;\
 	cd $(CURDIR);\
