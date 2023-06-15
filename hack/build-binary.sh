@@ -4,7 +4,7 @@
 
 
 # Define the platforms to build for
-PLATFORMS="linux/amd64 linux/arm64 windows/amd64 windows/arm64"
+PLATFORMS="linux/amd64 linux/arm64"
 
 # Define the output directory
 OUTPUT_DIR="../_output/bin"
