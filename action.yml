@@ -30,7 +30,7 @@ runs:
     - name: Install kubearmor
       uses: zhy76/kubearmor-action/actions/install-kubearmor@dev
     - name: get pod
-      run: sleep 60 && kubectl get po -A
+      run: kubectl get po -A
       shell: bash
     # Excuting the main logic of kubearmor-action by invoke binary file
     - name: Execute
@@ -56,11 +56,15 @@ runs:
     - name: Visulization
       run: |
         curl -O https://raw.githubusercontent.com/accuknox/tools/main/filter-policy && chmod +x filter-policy
-        karmor discover --network -n app > app-policies.yaml
-        ./filter-policy -f app-policies.yaml -g app.png
+        karmor discover --network -n app > app_sys_policies.yaml
+        karmor discover --network -n app -p CiliumNetworkPolicy > app_cilium_policies.yaml
+        ./filter-policy -f app-policies.yaml -g app_sys.png
+        ./filter-policy -f app_cilium_policies.yaml -g app_cilium.png
       shell: bash
     - name: Upload Image
       uses: actions/upload-artifact@v2
       with:
-        name: app
-        path: app.png
+        name: app_visulization
+        path: |
+          app_sys.png
+          app_cilium.png
