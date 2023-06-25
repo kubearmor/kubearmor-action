@@ -24,12 +24,7 @@ for PLATFORM in $PLATFORMS; do
   ARCH="${PARTS[1]}"
 
   # Set the output file name based on the platform
-  # Add .exe extension for Windows
-  if [ "$OS" = "windows" ]; then
-    FILENAME="$OS-$ARCH-$VERSION.exe"
-  else
-    FILENAME="$OS-$ARCH-$VERSION"
-  fi
+  FILENAME="$OS-$ARCH-$VERSION"
 
   # Set the environment variables for cross-compiling
   export GOOS="$OS"
