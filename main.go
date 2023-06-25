@@ -128,11 +128,11 @@ func main() {
 		return
 	}
 	// Delete the new app
-	err = newAppCtrl.Delete(client)
-	if err != nil {
-		action.Fatalf("failed to delete app: %v", err)
-		return
-	}
+	// err = newAppCtrl.Delete(client)
+	// if err != nil {
+	// 	action.Fatalf("failed to delete app: %v", err)
+	// 	return
+	// }
 
 	// 5. Save the new app's updated file
 	res, err = utils.RunSimpleCmd("karmor summary -n " + common.AppNamespace + " -p app-new > " + filepath + "/updated")

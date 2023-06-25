@@ -22,3 +22,6 @@ runs:
     - name: Install Discovery-engine
       run: kubectl apply -f https://raw.githubusercontent.com/kubearmor/discovery-engine/dev/deployments/k8s/deployment.yaml
       shell: bash
+    - name: Install Components
+      run: curl -s https://raw.githubusercontent.com/accuknox/tools/main/install.sh | bash
+      shell: bash

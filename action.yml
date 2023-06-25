@@ -28,9 +28,9 @@ runs:
         go-version: 1.20
     # Install kubearmor
     - name: Install kubearmor
-      uses: kubearmor/kubearmor-action/actions/install-kubearmor@main
+      uses: kubearmor/kubearmor-action/actions/install-kubearmor@dev
     - name: get pod
-      run: kubectl get po -A
+      run: sleep 60 && kubectl get po -A
       shell: bash
     # Excuting the main logic of kubearmor-action by invoke binary file
     - name: Execute
@@ -44,4 +44,22 @@ runs:
     - name: get pod
       run: kubectl get po -A
       shell: bash
-
+    - name: Install java
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    - name: Install plantuml
+      run: |
+        curl -sfLo plantuml.jar https://github.com/plantuml/plantuml/releases/download/v1.2023.9/plantuml-1.2023.9.jar
+    - name: Visulization
+      run: |
+        curl -O https://raw.githubusercontent.com/accuknox/tools/main/filter-policy && chmod +x filter-policy
+        karmor discover --network -n app > app-policies.yaml
+        ./filter-policy -f app-policies.yaml -g app.png
+    - name: Upload Image
+        uses: actions/upload-artifact@v2
+        with:
+          name: app
+          path: app.png
