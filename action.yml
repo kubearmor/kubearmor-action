@@ -55,10 +55,10 @@ runs:
       shell: bash
     - name: Visulization
       run: |
-        curl -O https://raw.githubusercontent.com/accuknox/tools/main/filter-policy && chmod +x filter-policy
-        karmor discover --network -n app > app_sys_policies.yaml
-        karmor discover --network -n app -p CiliumNetworkPolicy > app_cilium_policies.yaml
-        ./filter-policy -f app-policies.yaml -g app_sys.png
+        mv ./hack/filter-policy ./
+        karmor discover --network -n app > app_sys_policies.yaml && cat app_sys_policies.yaml
+        karmor discover --network -n app -p CiliumNetworkPolicy > app_cilium_policies.yaml && cat app_cilium_policies.yaml
+        ./filter-policy -f app_sys_policies.yaml -g app_sys.png
         ./filter-policy -f app_cilium_policies.yaml -g app_cilium.png
       shell: bash
     - name: Upload Image

@@ -87,12 +87,12 @@ func main() {
 	}
 
 	// 3. Save the old app's baseline file
-	res, err = utils.RunSimpleCmd("karmor summary -n " + common.AppNamespace + " -p app-old > " + filepath + "/baseline")
-	action.Infof("res(old-app): %v", res)
-	if err != nil {
-		action.Fatalf("failed to run karmor summary for old-app: %v", err)
-		return
-	}
+	// res, err = utils.RunSimpleCmd("karmor summary -n " + common.AppNamespace + " -p app-old > " + filepath + "/baseline")
+	// action.Infof("res(old-app): %v", res)
+	// if err != nil {
+	// 	action.Fatalf("failed to run karmor summary for old-app: %v", err)
+	// 	return
+	// }
 
 	// 4. Deploy the new app
 	// Create fileHelper
@@ -135,18 +135,18 @@ func main() {
 	// }
 
 	// 5. Save the new app's updated file
-	res, err = utils.RunSimpleCmd("karmor summary -n " + common.AppNamespace + " -p app-new > " + filepath + "/updated")
-	action.Infof("res(new-app): %v", res)
-	if err != nil {
-		action.Fatalf("failed to run karmor summary for new-app: %v", err)
-		return
-	}
+	// res, err = utils.RunSimpleCmd("karmor summary -n " + common.AppNamespace + " -p app-new > " + filepath + "/updated")
+	// action.Infof("res(new-app): %v", res)
+	// if err != nil {
+	// 	action.Fatalf("failed to run karmor summary for new-app: %v", err)
+	// 	return
+	// }
 
 	// 6. Compare the baseline file and updated file
-	res, err = utils.RunSimpleCmd("diff " + filepath + "/baseline " + filepath + "/updated || true")
-	action.Infof("res(diff): %v", res)
-	if err != nil {
-		action.Fatalf("failed to run diff: %v", err)
-		return
-	}
+	// res, err = utils.RunSimpleCmd("diff " + filepath + "/baseline " + filepath + "/updated || true")
+	// action.Infof("res(diff): %v", res)
+	// if err != nil {
+	// 	action.Fatalf("failed to run diff: %v", err)
+	// 	return
+	// }
 }
