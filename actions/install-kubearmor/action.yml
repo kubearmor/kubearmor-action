@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Authors of KubeArmor
 
-name: 'install kubearmor'
-description: 'install kubearmor'
+name: 'install kubearmor components'
+description: 'install kubearmor components'
 runs:
   using: composite
   steps:
-    # Install kubearmor     
+    # Install kubearmor components   
     - name: Download required dependencies
       run: sudo apt-get install -y socat
       shell: bash
@@ -22,14 +22,6 @@ runs:
     - name: Install Discovery-engine
       run: kubectl apply -f https://raw.githubusercontent.com/kubearmor/discovery-engine/dev/deployments/k8s/deployment.yaml
       shell: bash
-    - name: Install Cilium
-      run: |
-        CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/master/stable.txt)
-        CLI_ARCH=amd64
-        if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
-        curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
-        sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
-        tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
-        rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
-        cilium install
+    - name: Install Components
+      run: PLATFORM={k3d} ./hack/install-components.sh
       shell: bash

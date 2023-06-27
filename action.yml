@@ -26,23 +26,20 @@ runs:
       uses: actions/setup-go@v3
       with:
         go-version: 1.20
-    # Install kubearmor
-    - name: Install kubearmor
+    # Install kubearmor components
+    - name: Install kubearmor components
       uses: zhy76/kubearmor-action/actions/install-kubearmor@dev
     - name: get pod
       run: kubectl get po -A
       shell: bash
     # Excuting the main logic of kubearmor-action by invoke binary file
-    # - name: Execute
-    #   run: node ${{ github.action_path }}/invoke-binary.js
-    #   env:
-    #     # pass inputs to env FYI: https://github.com/actions/runner/issues/665
-    #     INPUT_OLD-APP-IMAGE-NAME: ${{ inputs.old-app-image-name }}
-    #     INPUT_NEW-APP-IMAGE-NAME: ${{ inputs.new-app-image-name }}
-    #     INPUT_FILEPATH: ${{ inputs.filepath }}
-    #   shell: bash
-    - name: Install Sample k8s application
-      run: kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/master/release/kubernetes-manifests.yaml
+    - name: Execute
+      run: node ${{ github.action_path }}/invoke-binary.js
+      env:
+        # pass inputs to env FYI: https://github.com/actions/runner/issues/665
+        INPUT_OLD-APP-IMAGE-NAME: ${{ inputs.old-app-image-name }}
+        INPUT_NEW-APP-IMAGE-NAME: ${{ inputs.new-app-image-name }}
+        INPUT_FILEPATH: ${{ inputs.filepath }}
       shell: bash
     - name: get pod
       run: sleep 120 && kubectl get po -A
@@ -63,7 +60,7 @@ runs:
         karmor discover --network > app_sys_policies.yaml && cat app_sys_policies.yaml
         karmor discover -f yaml -p CiliumNetworkPolicy > app_cilium_policies.yaml && cat app_cilium_policies.yaml
         ./filter-policy -f app_sys_policies.yaml -g app_sys.png
-        ./filter-policy -f app_cilium_policies.yaml -N accuknox-agents -g app_cilium.png
+        ./filter-policy -f app_cilium_policies.yaml -N accuknox-agents -g app_network.png
       shell: bash
     - name: Upload Image
       uses: actions/upload-artifact@v2
@@ -71,4 +68,9 @@ runs:
         name: app_visulization
         path: |
           app_sys.png
-          app_cilium.png
+          app_network.png
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: connectivity-graph
+        path: release/connectivity-graph_1.png
