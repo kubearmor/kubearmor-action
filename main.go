@@ -4,10 +4,11 @@
 package main
 
 import (
-	"kubearmor-action/common"
-	ctrl "kubearmor-action/pkg/controller"
-	"kubearmor-action/pkg/controller/client"
-	"kubearmor-action/pkg/utils"
+	"github.com/kubearmor-action/common"
+	ctrl "github.com/kubearmor-action/pkg/controller"
+	"github.com/kubearmor-action/pkg/controller/client"
+	exe "github.com/kubearmor-action/utils/exec"
+	osi "github.com/kubearmor-action/utils/os"
 
 	"github.com/sethvargo/go-githubactions"
 )
@@ -48,7 +49,7 @@ func main() {
 	}()
 	// 2. Deploy the old app
 	// Create fileHelper
-	oldAppFilehelper := utils.NewFileHelper(common.OldAppTemplateFilePath)
+	oldAppFilehelper := osi.NewFileHelper(common.OldAppTemplateFilePath)
 	// Replace the old app image name
 	oldAppObj, err := oldAppFilehelper.ReplaceImageName(common.OldAppImagePlaceholderName, oldAppName)
 	if err != nil {
@@ -73,7 +74,7 @@ func main() {
 		return
 	}
 	// Check the pods
-	res, err := utils.RunSimpleCmd("kubectl get po -A")
+	res, err := exe.RunSimpleCmd("kubectl get po -A")
 	action.Infof("res(get pods):\n %v", res)
 	if err != nil {
 		action.Fatalf("failed to get pods: %v", err)
@@ -96,7 +97,7 @@ func main() {
 
 	// 4. Deploy the new app
 	// Create fileHelper
-	newAppFilehelper := utils.NewFileHelper(common.NewAppTemplateFilePath)
+	newAppFilehelper := osi.NewFileHelper(common.NewAppTemplateFilePath)
 	// Replace the new app image name
 	newAppObj, err := newAppFilehelper.ReplaceImageName(common.NewAppImagePlaceholderName, newAppName)
 	if err != nil {
@@ -121,7 +122,7 @@ func main() {
 		return
 	}
 	// Check the pods
-	res, err = utils.RunSimpleCmd("kubectl get po -A")
+	res, err = exe.RunSimpleCmd("kubectl get po -A")
 	action.Infof("res(get pods):\n %v", res)
 	if err != nil {
 		action.Fatalf("failed to get pods: %v", err)

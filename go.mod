@@ -1,4 +1,4 @@
-module kubearmor-action
+module github.com/kubearmor-action
 
 go 1.20
 

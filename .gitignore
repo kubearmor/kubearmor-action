@@ -21,3 +21,5 @@ go.work
 # contribution
 .vscode
 .idea
+
+*.png

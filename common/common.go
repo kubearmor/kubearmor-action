@@ -20,6 +20,7 @@ const (
 
 const (
 	ROOT = "root"
+	TMP  = "."
 )
 
 var (
@@ -37,4 +38,12 @@ func GetHomeDir() string {
 		return "/root"
 	}
 	return home
+}
+
+func GetWorkDir() string {
+	pwd, err := os.Getwd()
+	if err != nil {
+		return "./"
+	}
+	return pwd
 }

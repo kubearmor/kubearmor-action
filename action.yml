@@ -42,7 +42,7 @@ runs:
         INPUT_FILEPATH: ${{ inputs.filepath }}
       shell: bash
     - name: get pod
-      run: sleep 120 && kubectl get po -A
+      run: kubectl get po -A
       shell: bash
     - name: Set up Java
       uses: actions/setup-java@v3

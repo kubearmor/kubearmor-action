@@ -84,7 +84,7 @@ endif
 scan: 
 	go install golang.org/x/vuln/cmd/govulncheck@latest ;\
 	cd $(CURDIR);\
-	govulncheck -v ./... ;\
+	govulncheck ./... ;\
 
 .PHONY: build
 ## build: Build kubearmor-action on different OS

@@ -8,10 +8,11 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"kubearmor-action/common"
-	"kubearmor-action/pkg/utils"
 	"path/filepath"
 	"time"
+
+	"github.com/kubearmor-action/common"
+	"github.com/kubearmor-action/utils"
 
 	"github.com/pkg/errors"
 	v1 "k8s.io/api/core/v1"
