@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2023 Authors of KubeArmor
+
 package cmd
 
 import (
@@ -9,10 +12,6 @@ import (
 	"k8s.io/klog"
 )
 
-var (
-	jsonFile string
-	output   string
-)
 var systemCmd = &cobra.Command{
 	Use:     "system",
 	Short:   "system subcommand is a command to visualization system behaviors.",
@@ -27,7 +26,7 @@ var systemCmd = &cobra.Command{
 		if err != nil {
 			klog.Fatalf("Error: getting absolute path of 'file' flag: %v", err)
 		}
-		err = visual.ConvertJsonToImage(jsonFile, output)
+		err = visual.ConvertSysJSONToImage(jsonFile, output)
 		if err != nil {
 			fmt.Println("Error:", err)
 		}
@@ -44,5 +43,4 @@ func init() {
 	if err := systemCmd.MarkPersistentFlagRequired("file"); err != nil {
 		klog.Fatalf("Error: marking 'file' flag as required: %v", err)
 	}
-
 }

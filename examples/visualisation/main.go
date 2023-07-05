@@ -13,7 +13,10 @@ import (
 func main() {
 	// jsonFile is the name of the JSON file that you shared with me
 	jsonFile := common.GetWorkDir() + "/test/testdata/test-summary-data.json"
-	err := visual.ConvertJsonToImage(jsonFile, "test.png")
+	// sd := visual.ParseSummaryData(jsonFile)
+	// vnd := visual.ParseNetworkData(sd)
+	// fmt.Println(vnd)
+	err := visual.ConvertNetworkJSONToImage(jsonFile, "test.png")
 	if err != nil {
 		fmt.Println("Error:", err)
 	}

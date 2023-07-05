@@ -12,6 +12,7 @@ import (
 	"github.com/kubearmor-action/utils"
 	exe "github.com/kubearmor-action/utils/exec"
 	osi "github.com/kubearmor-action/utils/os"
+	"k8s.io/klog"
 )
 
 var (
@@ -32,7 +33,7 @@ func ParseSummaryData(path string) []*SummaryData {
 	// if err is not nil, it means there was an error during the reading process
 	if err != nil {
 		// print the error message and exit the program
-		fmt.Println("Error:", err)
+		klog.Errorf("Error: %v", err)
 		return nil
 	}
 
@@ -45,7 +46,7 @@ func ParseSummaryData(path string) []*SummaryData {
 	// if err is not nil, it means there was an error during the parsing process
 	if err != nil {
 		// print the error message and exit the program
-		fmt.Println("Error:", err)
+		klog.Errorf("Error: %v", err)
 		return nil
 	}
 
@@ -115,17 +116,151 @@ func handle_network_set(summaryData *SummaryData, vs *VisualSysData) {
 	}
 }
 
-// ConvertJsonToImage converts the JSON data to a plantuml image
-func ConvertJsonToImage(jsonFile string, output string) error {
+func ParseNetworkData(summaryDatas []*SummaryData) *VisualNetworkData {
+	if len(summaryDatas) == 0 {
+		return nil
+	}
+	vn := &VisualNetworkData{}
+	vn.NsLabels = make(map[string][]string)
+	for _, sd := range summaryDatas {
+		// Get Namespace Labels
+		getNsLabels(sd, vn)
+		// Get Network Connections Data
+		getConnectionData(sd, vn)
+	}
+	return vn
+}
+
+// Convert a VisualNetworkData object to a PlantUML format and save it in net.puml
+func ConvertVndToPlantUML(vnd *VisualNetworkData) error {
+	// Create a file named net.puml
+	file, err := os.Create(PWD + "net.puml") // #nosec
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	// Write the @startuml tag
+	_, err = file.WriteString("@startuml\n")
+	if err != nil {
+		return err
+	}
+
+	// Loop over the NsLabels and write the package and labels
+	for ns, labels := range vnd.NsLabels {
+		_, err = file.WriteString(fmt.Sprintf("package \"namespace: %s\" {\n", ns))
+		if err != nil {
+			return err
+		}
+		for _, label := range labels {
+			_, err = file.WriteString(fmt.Sprintf("[%s] #Lightblue\n", label))
+			if err != nil {
+				return err
+			}
+		}
+		_, err = file.WriteString("}\n")
+		if err != nil {
+			return err
+		}
+	}
+
+	// Loop over the Connections and write the arrows and ports
+	for _, conn := range vnd.Connections {
+		_, err = file.WriteString(fmt.Sprintf("%s", conn))
+		if err != nil {
+			return err
+		}
+	}
+
+	// Write the @enduml tag
+	_, err = file.WriteString("@enduml\n")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func getNsLabels(summaryData *SummaryData, vn *VisualNetworkData) {
+	nslb := vn.NsLabels
+	// if namespace exists
+	if _, ok := nslb[summaryData.Namespace]; ok {
+		for _, lb := range nslb[summaryData.Namespace] {
+			if lb == summaryData.Label {
+				return
+			}
+
+		}
+		nslb[summaryData.Namespace] = append(nslb[summaryData.Namespace], summaryData.Label)
+		return
+	}
+	// if namespace does not exist
+
+	vn.NsLabels[summaryData.Namespace] = append([]string(nil), summaryData.Label)
+}
+
+func getEdgeColor(protocol string) string {
+	if protocol == "TCPv6" {
+		return "red"
+	} else if protocol == "TCP" {
+		return "blue"
+	} else if protocol == "UDP" {
+		return "green"
+	} else {
+		return "grey"
+	}
+}
+
+func getConnectionData(summaryData *SummaryData, vn *VisualNetworkData) {
+	if summaryData.Label == "" {
+		return
+	}
+	for _, net := range summaryData.IngressConnection {
+		if net.Labels == "" {
+			continue
+		}
+		edgeColor := getEdgeColor(net.Protocol)
+		dst := summaryData.Label
+		src := net.Labels
+		edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : %s/%s\n", src, edgeColor, dst, net.Protocol, net.Port)
+		vn.Connections = append(vn.Connections, edge)
+	}
+	for _, net := range summaryData.EgressConnection {
+		if net.Labels == "" {
+			continue
+		}
+		edgeColor := getEdgeColor(net.Protocol)
+		dst := net.Labels
+		src := summaryData.Label
+		edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : %s/%s\n", src, edgeColor, dst, net.Protocol, net.Port)
+		vn.Connections = append(vn.Connections, edge)
+	}
+	vn.Connections = utils.RemoveDuplication(vn.Connections)
+}
+
+// ConvertSysJSONToImage converts the summary system JSON data to a plantuml image
+func ConvertSysJSONToImage(jsonFile string, output string) error {
+	klog.Infoln("Cheking Dependencies...")
+	// Check if java is installed
+	_, b := exe.CheckCmdIsExist("java")
+	if !b {
+		return fmt.Errorf("Error: java not installed")
+	}
+	// Check if plantuml.jar is installed
+	b = osi.IsFileExist(PWD + "/plantuml.jar")
+	if !b {
+		return fmt.Errorf("Error: plantuml.jar not installed")
+	}
+
 	// get summary data from json file
-	fmt.Println("Parsing Summary Data...")
+	klog.Infoln("Parsing Summary Data...")
 	sd := ParseSummaryData(jsonFile)
 	if sd == nil {
 		return fmt.Errorf("Error: SummaryData is nil")
 	}
 
 	// parse visual sys data from summary data
-	fmt.Println("Parsing Visual Sys Data...")
+	klog.Infoln("Parsing Visual System Data...")
 	vsd := ParseSysData(sd)
 	if vsd == nil {
 		return fmt.Errorf("Error: VisualSysData is nil")
@@ -141,7 +276,37 @@ func ConvertJsonToImage(jsonFile string, output string) error {
 	sys_puml = append(sys_puml, end...)
 	// fmt.Printf("%+v\n", string(sys_puml))
 
-	fmt.Println("Cheking Dependencies...")
+	klog.Infoln("Creating PlantUML File...")
+	// Create plantuml file
+	fw := osi.NewFileWriter(PWD + "/sys.puml")
+	err = fw.WriteFile(sys_puml)
+	if err != nil {
+		return err
+	}
+
+	klog.Infoln("Creating Image...")
+	s, err := exe.RunSimpleCmd("java -jar " + PWD + "./plantuml.jar " + PWD + "/sys.puml -output ./")
+	klog.Infoln(s)
+	if err != nil {
+		return err
+	}
+
+	klog.Infoln("Removing PlantUML File...")
+	err = osi.RemoceFile(PWD + "/sys.puml")
+	if err != nil {
+		return err
+	}
+	_, err = exe.RunSimpleCmd("mv " + PWD + "/sys.png " + common.GetWorkDir() + "/" + output)
+	if err != nil {
+		return err
+	}
+	klog.Infoln("Image Created Successfully!")
+	return nil
+}
+
+// ConvertNetworkJSONToImage converts the summary network JSON data to a plantuml image
+func ConvertNetworkJSONToImage(jsonFile string, output string) error {
+	klog.Info("Cheking Dependencies...")
 	// Check if java is installed
 	_, b := exe.CheckCmdIsExist("java")
 	if !b {
@@ -153,30 +318,43 @@ func ConvertJsonToImage(jsonFile string, output string) error {
 		return fmt.Errorf("Error: plantuml.jar not installed")
 	}
 
-	fmt.Println("Creating PlantUML File...")
+	// get summary data from json file
+	klog.Infoln("Parsing Summary Data...")
+	sd := ParseSummaryData(jsonFile)
+	if sd == nil {
+		return fmt.Errorf("Error: SummaryData is nil")
+	}
+
+	// parse visual network connections data from summary data
+	klog.Infoln("Parsing Visual Network Connections Data...")
+	vnd := ParseNetworkData(sd)
+	if vnd == nil {
+		return fmt.Errorf("Error: VisualNetworkData is nil")
+	}
+
 	// Create plantuml file
-	fw := osi.NewFileWriter(PWD + "/sys.puml")
-	err = fw.WriteFile(sys_puml)
+	klog.Infoln("Creating PlantUML File...")
+	err := ConvertVndToPlantUML(vnd)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Creating Image...")
-	s, err := exe.RunSimpleCmd("java -jar " + PWD + "./plantuml.jar " + PWD + "/sys.puml -output ./")
-	fmt.Println(s)
+	klog.Infoln("Creating Image...")
+	s, err := exe.RunSimpleCmd("java -jar " + PWD + "./plantuml.jar " + PWD + "/net.puml -output ./")
+	klog.Infoln(s)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Removing PlantUML File...")
-	err = osi.RemoceFile(PWD + "/sys.puml")
+	klog.Infoln("Removing PlantUML File...")
+	err = osi.RemoceFile(PWD + "/net.puml")
 	if err != nil {
 		return err
 	}
-	_, err = exe.RunSimpleCmd("mv " + PWD + "/sys.png " + common.GetWorkDir() + "/" + output)
+	_, err = exe.RunSimpleCmd("mv " + PWD + "/net.png " + common.GetWorkDir() + "/" + output)
 	if err != nil {
 		return err
 	}
-	fmt.Println("Image Created Successfully!")
+	klog.Infoln("Image Created Successfully!")
 	return nil
 }

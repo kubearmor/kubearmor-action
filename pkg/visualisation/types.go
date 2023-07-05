@@ -70,7 +70,7 @@ type VisualNetworkData struct {
 			[app: paymentservice] #Lightblue
 	 	}
 	*/
-	NsLabels []map[string][]string // Array of :namespace -> [label1 #color, label2 #color, ...]
+	NsLabels map[string][]string // Array of :namespace -> [label1 #color, label2 #color, ...]
 	/**
 	 * 2. Connections, eg.:
 	 	[app: checkoutservice] -[#blue]-> [app: emailservice] : TCP/8080
