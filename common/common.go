@@ -43,7 +43,7 @@ func GetHomeDir() string {
 func GetWorkDir() string {
 	pwd, err := os.Getwd()
 	if err != nil {
-		return "./"
+		panic(err)
 	}
 	return pwd
 }

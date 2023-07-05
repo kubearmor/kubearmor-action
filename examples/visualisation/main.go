@@ -7,13 +7,13 @@ import (
 	"fmt"
 
 	"github.com/kubearmor-action/common"
-	types "github.com/kubearmor-action/pkg/visualisation"
+	visual "github.com/kubearmor-action/pkg/visualisation"
 )
 
 func main() {
 	// jsonFile is the name of the JSON file that you shared with me
 	jsonFile := common.GetWorkDir() + "/test/testdata/test-summary-data.json"
-	err := types.ConvertJsonToImage(jsonFile)
+	err := visual.ConvertJsonToImage(jsonFile, "test.png")
 	if err != nil {
 		fmt.Println("Error:", err)
 	}

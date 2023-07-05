@@ -116,10 +116,10 @@ func handle_network_set(summaryData *SummaryData, vs *VisualSysData) {
 }
 
 // ConvertJsonToImage converts the JSON data to a plantuml image
-func ConvertJsonToImage(path string) error {
+func ConvertJsonToImage(jsonFile string, output string) error {
 	// get summary data from json file
 	fmt.Println("Parsing Summary Data...")
-	sd := ParseSummaryData(path)
+	sd := ParseSummaryData(jsonFile)
 	if sd == nil {
 		return fmt.Errorf("Error: SummaryData is nil")
 	}
@@ -173,7 +173,7 @@ func ConvertJsonToImage(path string) error {
 	if err != nil {
 		return err
 	}
-	_, err = exe.RunSimpleCmd("mv " + PWD + "/sys.png " + common.GetWorkDir() + "/sys.png")
+	_, err = exe.RunSimpleCmd("mv " + PWD + "/sys.png " + common.GetWorkDir() + "/" + output)
 	if err != nil {
 		return err
 	}
