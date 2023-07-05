@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"path/filepath"
 
-	visual "github.com/kubearmor-action/pkg/visualisation"
 	"github.com/spf13/cobra"
+	visual "github.com/zhy76/kubearmor-action/pkg/visualisation"
 	"k8s.io/klog"
 )
 

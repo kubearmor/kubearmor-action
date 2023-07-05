@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/kubearmor-action/common"
-	"github.com/kubearmor-action/utils"
+	"github.com/zhy76/kubearmor-action/common"
+	"github.com/zhy76/kubearmor-action/utils"
 
 	"github.com/pkg/errors"
 	v1 "k8s.io/api/core/v1"
