@@ -22,6 +22,3 @@ runs:
     - name: Install Discovery-engine
       run: kubectl apply -f https://raw.githubusercontent.com/kubearmor/discovery-engine/dev/deployments/k8s/deployment.yaml
       shell: bash
-    - name: Install Components
-      run: PLATFORM={k3d} ./hack/install-components.sh
-      shell: bash

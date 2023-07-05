@@ -56,11 +56,10 @@ runs:
       shell: bash
     - name: Visulization
       run: |
-        mv ./hack/filter-policy ./
-        karmor discover --network > app_sys_policies.yaml && cat app_sys_policies.yaml
-        karmor discover -f yaml -p CiliumNetworkPolicy > app_cilium_policies.yaml && cat app_cilium_policies.yaml
-        ./filter-policy -f app_sys_policies.yaml -g app_sys.png
-        ./filter-policy -f app_cilium_policies.yaml -N accuknox-agents -g app_network.png
+        make build-visual-cli
+        # karmor summary -n app > summary.json && cat summary.json
+        ./visual -f /test/testdata/test- -o app_sys.png
+        ./visual -f /test/testdata/test- -o app_network.png
       shell: bash
     - name: Upload Image
       uses: actions/upload-artifact@v2
@@ -69,8 +68,3 @@ runs:
         path: |
           app_sys.png
           app_network.png
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: connectivity-graph
-        path: release/connectivity-graph_1.png
