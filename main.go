@@ -4,11 +4,11 @@
 package main
 
 import (
-	"github.com/kubearmor-action/common"
-	ctrl "github.com/kubearmor-action/pkg/controller"
-	"github.com/kubearmor-action/pkg/controller/client"
-	exe "github.com/kubearmor-action/utils/exec"
-	osi "github.com/kubearmor-action/utils/os"
+	"github.com/zhy76/kubearmor-action/common"
+	ctrl "github.com/zhy76/kubearmor-action/pkg/controller"
+	"github.com/zhy76/kubearmor-action/pkg/controller/client"
+	exe "github.com/zhy76/kubearmor-action/utils/exec"
+	osi "github.com/zhy76/kubearmor-action/utils/os"
 
 	"github.com/sethvargo/go-githubactions"
 )

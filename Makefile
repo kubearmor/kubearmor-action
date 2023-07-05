@@ -94,7 +94,7 @@ build:
 .PHONY: build-visual-cli
 ## build-visual-cli: Build visual-cli binary
 build-visual-cli:
-	go build -o visual cmd/visual/main.go 
+	go build -o visual $(CURDIR)/cmd/visual/main.go
 
 ## help: Display help information
 help: Makefile

@@ -6,8 +6,8 @@ package controller
 import (
 	"context"
 
-	"github.com/kubearmor-action/common"
-	"github.com/kubearmor-action/pkg/controller/client"
+	"github.com/zhy76/kubearmor-action/common"
+	"github.com/zhy76/kubearmor-action/pkg/controller/client"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
