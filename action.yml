@@ -14,13 +14,24 @@ inputs:
     description: 'File path to store baseline and updated file'
     required: flase
     default: '/tmp'
+outputs:
+  visualisation-results-artifact:
+    description: The name of the artifact containing the visualisation report
+    value: ${{ steps.output-results.outputs.visualisation-artifact }}
+  sys-visualisation-image:
+    description: The name of the actual file in the artifact, which contains the system visualisation report
+    value: ${{ steps.output-results.outputs.sys-visualisation-image }}
+  network-visualisation-image:
+    description: The name of the actual file in the artifact, which contains the network visualisation report
+    value: ${{ steps.output-results.outputs.network-visualisation-image }}
+    
 runs:
   using: composite
   steps:
     - name: Checkout
       uses: actions/checkout@v3
       with:
-        repository: zhy76/kubearmor-action
+        repository: kubearmor/kubearmor-action
         ref: dev
     - name: Setup Go
       uses: actions/setup-go@v4
@@ -31,7 +42,7 @@ runs:
         GO111MODULE: "on"
     # Install kubearmor components
     # - name: Install kubearmor components
-    #   uses: zhy76/kubearmor-action/actions/install-kubearmor@dev
+    #   uses: kubearmor/kubearmor-action/actions/install-kubearmor@dev
     # - name: get pod
     #   run: kubectl get po -A
     #   shell: bash
@@ -56,19 +67,25 @@ runs:
       run: |
         sudo apt-get install -y graphviz
       shell: bash
-    - name: Visulization
+    - name: Visulisation
       run: |
-        # go mod init github.com/zhy76/kubearmor-action
-        # go mod tidy
         make build-visual-cli
         # karmor summary -n app > summary.json && cat summary.json
         ./visual system -f ${PWD}/test/testdata/test-summary-data.json -o app_sys.png
         ./visual network -f ${PWD}/test/testdata/test-summary-data.json -o app_network.png
       shell: bash
     - name: Upload Image
+      id: app_visulisation
       uses: actions/upload-artifact@v2
       with:
-        name: app_visulization
+        name: app_visulisation
         path: |
           app_sys.png
           app_network.png
+    - name: Set outputs
+      id: output-results
+      run: |
+        echo "::set-output name=visualisation-artifact::app_visulisation"
+        echo "::set-output name=sys-visualisation-image::app_sys.png"
+        echo "::set-output name=network-visualisation-image::app_network.png"
+      shell: bash

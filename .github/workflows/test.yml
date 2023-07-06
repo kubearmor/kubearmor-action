@@ -5,6 +5,9 @@ on:
     branches: [main,dev]
   pull_request:
     branches: [main,dev]
+permissions:
+    pull-requests: write
+    contents: write
 
 jobs:
   test_job:
@@ -12,8 +15,23 @@ jobs:
     name: A job to test kubearmor-action
     steps:
       - name: kubearmor-action test
-        uses: zhy76/kubearmor-action@dev
+        id: visualisation-report
+        uses: kubearmor/kubearmor-action@dev
         with:
           old-app-image-name: 'nginx:1.22.1'
           new-app-image-name: 'nginx:1.23'
-
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ steps.visualisation-report.outputs.visualisation-results-artifact }}
+          path: images
+      - run: ls /home/runner/work/kubearmor-action/kubearmor-action/images
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./images
+      - name: comment PR
+        run: |
+          gh pr comment  ${{ github.event.number }} -b"![system_graph](https://raw.githubusercontent.com/${{ github.repository }}/gh-pages/app_sys.png)"
+          gh pr comment  ${{ github.event.number }} -b"![network_graph](https://raw.githubusercontent.com/${{ github.repository }}/gh-pages/app_network.png)"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

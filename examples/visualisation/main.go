@@ -6,8 +6,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/zhy76/kubearmor-action/common"
-	visual "github.com/zhy76/kubearmor-action/pkg/visualisation"
+	"github.com/kubearmor/kubearmor-action/common"
+	visual "github.com/kubearmor/kubearmor-action/pkg/visualisation"
 )
 
 func main() {

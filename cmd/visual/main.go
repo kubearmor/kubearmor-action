@@ -4,7 +4,7 @@
 package main
 
 import (
-	"github.com/zhy76/kubearmor-action/cmd/visual/cmd"
+	"github.com/kubearmor/kubearmor-action/cmd/visual/cmd"
 )
 
 func main() {

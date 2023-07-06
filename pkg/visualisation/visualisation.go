@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/zhy76/kubearmor-action/common"
-	"github.com/zhy76/kubearmor-action/utils"
-	exe "github.com/zhy76/kubearmor-action/utils/exec"
-	osi "github.com/zhy76/kubearmor-action/utils/os"
+	"github.com/kubearmor/kubearmor-action/common"
+	"github.com/kubearmor/kubearmor-action/utils"
+	exe "github.com/kubearmor/kubearmor-action/utils/exec"
+	osi "github.com/kubearmor/kubearmor-action/utils/os"
 	"k8s.io/klog"
 )
 
