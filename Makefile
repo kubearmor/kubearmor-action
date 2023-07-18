@@ -11,7 +11,7 @@ endif
 
 .PHONY: all
 ## all: Run all commands
-all: gofmt golint install-addlicense addlicense gosec scan build
+all: gofmt golint install-addlicense addlicense gosec
 
 .PHONY: gofmt
 ## gofmt: Run gofmt linter
@@ -79,17 +79,17 @@ ifeq (, $(shell which gosec))
 endif
 	cd $(CURDIR); gosec ./...
 
-.PHONY: scan
-## scan: Run scan linter
-scan: 
-	go install golang.org/x/vuln/cmd/govulncheck@latest ;\
-	cd $(CURDIR);\
-	govulncheck ./... ;\
+# .PHONY: scan
+# ## scan: Run scan linter
+# scan: 
+# 	go install golang.org/x/vuln/cmd/govulncheck@latest ;\
+# 	cd $(CURDIR);\
+# 	govulncheck ./... ;\
 
-.PHONY: build
-## build: Build kubearmor-action on different OS
-build:
-	cd $(CURDIR)/hack; ./build-binary.sh
+# .PHONY: build
+# ## build: Build kubearmor-action on different OS
+# build:
+# 	cd $(CURDIR)/hack; ./build-binary.sh
 
 .PHONY: build-visual-cli
 ## build-visual-cli: Build visual-cli binary

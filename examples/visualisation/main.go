@@ -18,6 +18,10 @@ func main() {
 	// fmt.Println(vnd)
 	err := visual.ConvertNetworkJSONToImage(jsonFile, "test.png")
 	if err != nil {
-		fmt.Println("Error:", err)
+		fmt.Println("Network-Visualisation Error:", err)
+	}
+	err = visual.ConvertSysJSONToImage(jsonFile, "test2.png")
+	if err != nil {
+		fmt.Println("System-Visualisation Error:", err)
 	}
 }

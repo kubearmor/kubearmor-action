@@ -4,15 +4,15 @@
 name: 'kubearmor-action'
 description: 'kubearmor-action'
 inputs:
-  old-app-image-name:  # old app docker image name
-    description: 'Old app docker image name'
+  old-app:  # old app manifests address
+    description: 'Old app manifests address'
     required: true
-  new-app-image-name:  # new app docker image name
-    description: 'New app docker image name'
+  new-app:  # new app manifests address
+    description: 'New app manifests address'
     required: true
   filepath: # file path to store baseline and updated file
     description: 'File path to store baseline and updated file'
-    required: flase
+    required: false
     default: '/tmp'
 outputs:
   visualisation-results-artifact:
@@ -31,7 +31,7 @@ runs:
     - name: Checkout
       uses: actions/checkout@v3
       with:
-        repository: kubearmor/kubearmor-action
+        repository: zhy76/kubearmor-action
         ref: dev
     - name: Setup Go
       uses: actions/setup-go@v4
@@ -40,52 +40,28 @@ runs:
       env:
         GOPATH: ${{ runner.workspace }}
         GO111MODULE: "on"
-    # Install kubearmor components
+    # # Install kubearmor components
     # - name: Install kubearmor components
-    #   uses: kubearmor/kubearmor-action/actions/install-kubearmor@dev
+    #   uses: zhy76/kubearmor-action/actions/install-kubearmor@dev
     # - name: get pod
     #   run: kubectl get po -A
     #   shell: bash
-    # Excuting the main logic of kubearmor-action by invoke binary file
-    # - name: Execute
-    #   run: node ${{ github.action_path }}/invoke-binary.js
+    # # Diff system and network behaviour reportExcuting the main logic of kubearmor-action by invoke binary file
+    # - name: Diff system and network behaviour report
+    #   uses: zhy76/kubearmor-action/actions/diff-report@dev
     #   env:
     #     # pass inputs to env FYI: https://github.com/actions/runner/issues/665
-    #     INPUT_OLD-APP-IMAGE-NAME: ${{ inputs.old-app-image-name }}
-    #     INPUT_NEW-APP-IMAGE-NAME: ${{ inputs.new-app-image-name }}
+    #     INPUT_OLD-APP: ${{ inputs.old-app }}
+    #     INPUT_NEW-APP: ${{ inputs.new-app }}
     #     INPUT_FILEPATH: ${{ inputs.filepath }}
-    #   shell: bash
-    # - name: get pod
-    #   run: kubectl get po -A
-    #   shell: bash
-    - name: Set up Java
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-    - name: Install graphviz
-      run: |
-        sudo apt-get install -y graphviz
-      shell: bash
-    - name: Visulisation
-      run: |
-        make build-visual-cli
-        # karmor summary -n app > summary.json && cat summary.json
-        ./visual system -f ${PWD}/test/testdata/test-summary-data.json -o app_sys.png
-        ./visual network -f ${PWD}/test/testdata/test-summary-data.json -o app_network.png
-      shell: bash
-    - name: Upload Image
-      id: app_visulisation
-      uses: actions/upload-artifact@v2
-      with:
-        name: app_visulisation
-        path: |
-          app_sys.png
-          app_network.png
-    - name: Set outputs
+    #     INPUT_NEW-APP-URL: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.head_commit.id }}/${{ inputs.new-app }}
+    # System and network visualisation report
+    - name: System and network visualisation report
+      uses: zhy76/kubearmor-action/actions/visual-report@dev
+    - name: Set visualisation outputs
       id: output-results
       run: |
         echo "::set-output name=visualisation-artifact::app_visulisation"
-        echo "::set-output name=sys-visualisation-image::app_sys.png"
-        echo "::set-output name=network-visualisation-image::app_network.png"
+        echo "::set-output name=sys-visualisation-image::app_sys_${{ github.event.head_commit.id }}.png"
+        echo "::set-output name=network-visualisation-image::app_network_${{ github.event.head_commit.id }}.png"
       shell: bash
