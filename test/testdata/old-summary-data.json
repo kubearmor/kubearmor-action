@@ -1,0 +1,179 @@
+[{
+    "DeploymentName": "mysql-5df4cd65d5",
+    "PodName": "mysql-5df4cd65d5-l2zl2",
+    "ClusterName": "default",
+    "Namespace": "worpress-mysql",
+    "Label": "app=mysql",
+    "ContainerName": "\n\t/bin/bash\u0012\n/bin/sleep\u001a\u00012\"\u001cMon Jul  3 08:26:31 UTC 2023*\u0005Allow",
+    "ProcessData": [{
+            "Source": "/usr/bin/mysql_tzinfo_to_sql",
+            "Destination": "/usr/share/zoneinfo/right/America/Goose_Bay",
+            "Count": "1",
+            "UpdatedTime": "Mon Jul  3 08:26:40 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/sbin/mysqld",
+            "Destination": "/var/lib/mysql/performance_schema/table_lock_waits_summary_by_table.frm",
+            "Count": "3",
+            "UpdatedTime": "Mon Jul  3 08:26:46 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/bin/mysql_tzinfo_to_sql",
+            "Destination": "/usr/share/zoneinfo/Etc/GMT+8",
+            "Count": "1",
+            "UpdatedTime": "Mon Jul  3 08:26:38 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/bin/mysql_tzinfo_to_sql",
+            "Destination": "/usr/share/zoneinfo/right/Iceland",
+            "Count": "2",
+            "UpdatedTime": "Mon Jul  3 08:26:42 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/sbin/mysqld",
+            "Destination": "/var/lib/mysql/performance_schema/events_statements_summary_by_user_by_event_name.frm",
+            "Count": "3",
+            "UpdatedTime": "Mon Jul  3 08:26:46 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/bin/mysql_tzinfo_to_sql",
+            "Destination": "/usr/share/zoneinfo/right/Australia",
+            "Count": "1",
+            "UpdatedTime": "Mon Jul  3 08:26:41 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/bin/mysql_tzinfo_to_sql",
+            "Destination": "/usr/share/zoneinfo/Europe/Minsk",
+            "Count": "2",
+            "UpdatedTime": "Mon Jul  3 08:26:38 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/bin/bash",
+            "Destination": "/dev/null",
+            "Count": "1",
+            "UpdatedTime": "Mon Jul  3 08:26:15 UTC 2023",
+            "Status": "Allow"
+        }
+    ],
+    "FileData": [{
+        "Source": "/bin/bash",
+        "Destination": " /etc/",
+        "Count": "2",
+        "UpdatedTime": "Mon Jul  3 08:26:43 UTC 2023",
+        "Status": "Allow"
+    }],
+    "IngressConnection": [{
+        "Protocol": "TCPv6",
+        "Command": "/usr/sbin/mysqld",
+        "IP": "pod/wordpress-c4bf5b44b-4pl25",
+        "Port": "3306",
+        "Labels": "app=wordpress",
+        "Count": "1",
+        "UpdatedTime": "Mon Jul  3 08:26:43 UTC 2023"
+    }, {
+        "Protocol": "TCPv6",
+        "Command": "/usr/sbin/mysqld1",
+        "IP": "pod/wordpress-c4bf5b44b-4pl25",
+        "Port": "3307",
+        "Labels": "app=wordpress",
+        "Count": "1",
+        "UpdatedTime": "Mon Jul  3 08:26:43 UTC 2023"
+    }]
+},
+{
+    "DeploymentName": "wordpress-5df4cd65d5",
+    "PodName": "wordpress-5df4cd65d5-l2zl2",
+    "ClusterName": "default",
+    "Namespace": "worpress-mysql",
+    "Label": "app=wordpress",
+    "ContainerName": "\n\t/bin/bash\u0012\n/bin/sleep\u001a\u00012\"\u001cMon Jul  3 08:26:31 UTC 2023*\u0005Allow",
+    "ProcessData": [{
+            "Source": "/usr/bin/mysql_tzinfo_to_sql",
+            "Destination": "/usr/share/zoneinfo/right/America/Goose_Bay",
+            "Count": "1",
+            "UpdatedTime": "Mon Jul  3 08:26:40 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/sbin/mysqld",
+            "Destination": "/var/lib/mysql/performance_schema/table_lock_waits_summary_by_table.frm",
+            "Count": "3",
+            "UpdatedTime": "Mon Jul  3 08:26:46 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/bin/mysql_tzinfo_to_sql",
+            "Destination": "/usr/share/zoneinfo/Etc/GMT+8",
+            "Count": "1",
+            "UpdatedTime": "Mon Jul  3 08:26:38 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/bin/mysql_tzinfo_to_sql",
+            "Destination": "/usr/share/zoneinfo/right/Iceland",
+            "Count": "2",
+            "UpdatedTime": "Mon Jul  3 08:26:42 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/sbin/mysqld",
+            "Destination": "/var/lib/mysql/performance_schema/events_statements_summary_by_user_by_event_name.frm",
+            "Count": "3",
+            "UpdatedTime": "Mon Jul  3 08:26:46 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/bin/mysql_tzinfo_to_sql",
+            "Destination": "/usr/share/zoneinfo/right/Australia",
+            "Count": "1",
+            "UpdatedTime": "Mon Jul  3 08:26:41 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/usr/bin/mysql_tzinfo_to_sql",
+            "Destination": "/usr/share/zoneinfo/Europe/Minsk",
+            "Count": "2",
+            "UpdatedTime": "Mon Jul  3 08:26:38 UTC 2023",
+            "Status": "Allow"
+        },
+        {
+            "Source": "/bin/bash",
+            "Destination": "/dev/null",
+            "Count": "1",
+            "UpdatedTime": "Mon Jul  3 08:26:15 UTC 2023",
+            "Status": "Allow"
+        }
+    ],
+    "FileData": [{
+        "Source": "/usr/local/bin/php",
+        "Destination": "/etc/hosts",
+        "Count": "4",
+        "UpdatedTime": "Mon Jul  3 08:26:43 UTC 2023",
+        "Status": "Allow"
+    }],
+    "EgressConnection": [{
+        "Protocol": "TCP",
+        "Command": "/usr/local/bin/php",
+        "IP": "svc/mysql",
+        "Port": "3306",
+        "Labels": "app=mysql",
+        "Count": "1",
+        "UpdatedTime": "Mon Jul  3 08:26:43 UTC 2023"
+    },{
+        "Protocol": "UDP",
+        "Command": "/usr/local/bin/php",
+        "IP": "svc/mysql",
+        "Port": "3307",
+        "Labels": "app=mysql",
+        "Count": "1",
+        "UpdatedTime": "Mon Jul  3 08:26:43 UTC 2023"
+    }]
+}
+]

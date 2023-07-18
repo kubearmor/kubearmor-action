@@ -21,7 +21,7 @@ runs:
         echo ${PWD} && make build-visual-cli
         # karmor summary -n app > summary.json && cat summary.json
         ./visual system -f ${PWD}/test/testdata/test-summary-data.json -o app_sys_${{ github.event.head_commit.id }}.png
-        ./visual network -f ${PWD}/test/testdata/test-summary-data.json -o app_network_${{ github.event.head_commit.id }}.png
+        ./visual network --old ${PWD}/test/testdata/old-summary-data.json --new ${PWD}/test/testdata/new-summary-data.json -o app_network_${{ github.event.head_commit.id }}.png
       shell: bash
     - name: Upload Image
       id: app_visulisation

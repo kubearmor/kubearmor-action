@@ -70,7 +70,7 @@
         "Status": "Allow"
     }],
     "IngressConnection": [{
-        "Protocol": "TCPv6",
+        "Protocol": "UDP",
         "Command": "/usr/sbin/mysqld",
         "IP": "pod/wordpress-c4bf5b44b-4pl25",
         "Port": "3306",
@@ -151,6 +151,14 @@
         "Status": "Allow"
     }],
     "EgressConnection": [{
+        "Protocol": "UDP",
+        "Command": "/usr/local/bin/php",
+        "IP": "svc/mysql",
+        "Port": "3306",
+        "Labels": "app=mysql",
+        "Count": "1",
+        "UpdatedTime": "Mon Jul  3 08:26:43 UTC 2023"
+    },{
         "Protocol": "TCP",
         "Command": "/usr/local/bin/php",
         "IP": "svc/mysql",

@@ -116,21 +116,6 @@ func handle_network_set(summaryData *SummaryData, vs *VisualSysData) {
 	}
 }
 
-func ParseNetworkData(summaryDatas []*SummaryData) *VisualNetworkData {
-	if len(summaryDatas) == 0 {
-		return nil
-	}
-	vn := &VisualNetworkData{}
-	vn.NsLabels = make(map[string][]string)
-	for _, sd := range summaryDatas {
-		// Get Namespace Labels
-		getNsLabels(sd, vn)
-		// Get Network Connections Data
-		getConnectionData(sd, vn)
-	}
-	return vn
-}
-
 // Convert a VisualNetworkData object to a PlantUML format and save it in net.puml
 func ConvertVndToPlantUML(vnd *VisualNetworkData) error {
 	// Create a file named net.puml
@@ -181,27 +166,107 @@ func ConvertVndToPlantUML(vnd *VisualNetworkData) error {
 	return nil
 }
 
+type connectionKey struct {
+	src      string
+	dst      string
+	protocol string
+	port     string
+}
+type connectionValue struct {
+	// red: changed, yellow: TCPv6, blue: TCP, green: UDP, grey: others
+	edgeColor string
+	// -1: deleted, 0: no change, 1: added
+	kind int
+}
+
+func ParseNetworkData(sd_olds, sd_news []*SummaryData) *VisualNetworkData {
+	// if len(sd_olds) == 0 {
+	// 	return nil
+	// }
+	cds_old := make(map[connectionKey]connectionValue, 0)
+	cds_new := make(map[connectionKey]connectionValue, 0)
+	cds_merged := make(map[connectionKey]connectionValue, 0)
+
+	vn := &VisualNetworkData{}
+	vn.NsLabels = make(map[string][]string)
+	for _, sd_old := range sd_olds {
+		// Get Namespace Labels
+		getNsLabels(sd_old, vn)
+		// Get Different Network Connections
+		getDiffConnectionData(sd_old, cds_old)
+	}
+
+	for _, sd_new := range sd_news {
+		// Get Namespace Labels
+		getNsLabels(sd_new, vn)
+		// Get Different Network Connections
+		getDiffConnectionData(sd_new, cds_new)
+	}
+
+	// merge the connections
+	for k, v := range cds_new {
+		// fmt.Println(k, v)
+		if _, ok := cds_old[k]; ok {
+			// if exists in both, means unchanged
+			cds_merged[k] = connectionValue{edgeColor: v.edgeColor, kind: 0}
+		} else {
+			// if exists in new, means added
+			cds_merged[k] = connectionValue{edgeColor: "red", kind: 1}
+		}
+	}
+	// check for deleted connections
+	for k := range cds_old {
+		// fmt.Println(k, v)
+		if _, ok := cds_new[k]; !ok {
+			// if exists in old, but not in new, means deleted
+			cds_merged[k] = connectionValue{edgeColor: "red", kind: -1}
+		}
+	}
+	// write the connections to the vn
+	for k, v := range cds_merged {
+		// unchanged
+		if v.kind == 0 {
+			edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : %s/%s\n", k.src, v.edgeColor, k.dst, k.protocol, k.port)
+			vn.Connections = append(vn.Connections, edge)
+		}
+		// added
+		if v.kind == 1 {
+			edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : ++%s/%s\n", k.src, v.edgeColor, k.dst, k.protocol, k.port)
+			vn.Connections = append(vn.Connections, edge)
+		}
+		// deleted
+		if v.kind == -1 {
+			edge := fmt.Sprintf("[%s] -[#%s]..> [%s] : --%s/%s\n", k.src, v.edgeColor, k.dst, k.protocol, k.port)
+			vn.Connections = append(vn.Connections, edge)
+		}
+	}
+	return vn
+}
+
 func getNsLabels(summaryData *SummaryData, vn *VisualNetworkData) {
+	label := summaryData.Label
+	if summaryData.Label == "" {
+		label = "default"
+	}
+
 	nslb := vn.NsLabels
 	// if namespace exists
 	if _, ok := nslb[summaryData.Namespace]; ok {
 		for _, lb := range nslb[summaryData.Namespace] {
-			if lb == summaryData.Label {
+			if lb == label {
 				return
 			}
-
 		}
-		nslb[summaryData.Namespace] = append(nslb[summaryData.Namespace], summaryData.Label)
+		nslb[summaryData.Namespace] = append(nslb[summaryData.Namespace], label)
 		return
 	}
 	// if namespace does not exist
-
-	vn.NsLabels[summaryData.Namespace] = append([]string(nil), summaryData.Label)
+	vn.NsLabels[summaryData.Namespace] = append([]string(nil), label)
 }
 
 func getEdgeColor(protocol string) string {
 	if protocol == "TCPv6" {
-		return "red"
+		return "orange"
 	} else if protocol == "TCP" {
 		return "blue"
 	} else if protocol == "UDP" {
@@ -211,32 +276,59 @@ func getEdgeColor(protocol string) string {
 	}
 }
 
-func getConnectionData(summaryData *SummaryData, vn *VisualNetworkData) {
-	if summaryData.Label == "" {
+func getDiffConnectionData(sd *SummaryData, cds map[connectionKey]connectionValue) {
+	if sd.Label == "" {
 		return
 	}
-	for _, net := range summaryData.IngressConnection {
+
+	for _, net := range sd.IngressConnection {
 		if net.Labels == "" {
 			continue
 		}
-		edgeColor := getEdgeColor(net.Protocol)
-		dst := summaryData.Label
+		dst := sd.Label
 		src := net.Labels
-		edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : %s/%s\n", src, edgeColor, dst, net.Protocol, net.Port)
-		vn.Connections = append(vn.Connections, edge)
+		ck := connectionKey{src: src, dst: dst, protocol: net.Protocol, port: net.Port}
+		cv := connectionValue{edgeColor: getEdgeColor(net.Protocol), kind: 0}
+		cds[ck] = cv
 	}
-	for _, net := range summaryData.EgressConnection {
+	for _, net := range sd.EgressConnection {
 		if net.Labels == "" {
 			continue
 		}
-		edgeColor := getEdgeColor(net.Protocol)
 		dst := net.Labels
-		src := summaryData.Label
-		edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : %s/%s\n", src, edgeColor, dst, net.Protocol, net.Port)
-		vn.Connections = append(vn.Connections, edge)
+		src := sd.Label
+		ck := connectionKey{src: src, dst: dst, protocol: net.Protocol, port: net.Port}
+		cv := connectionValue{edgeColor: getEdgeColor(net.Protocol), kind: 0}
+		cds[ck] = cv
 	}
-	vn.Connections = utils.RemoveDuplication(vn.Connections)
 }
+
+// func getConnectionData(summaryData *SummaryData, vn *VisualNetworkData) {
+// 	if summaryData.Label == "" {
+// 		return
+// 	}
+// 	for _, net := range summaryData.IngressConnection {
+// 		if net.Labels == "" {
+// 			continue
+// 		}
+// 		edgeColor := getEdgeColor(net.Protocol)
+// 		dst := summaryData.Label
+// 		src := net.Labels
+// 		edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : %s/%s\n", src, edgeColor, dst, net.Protocol, net.Port)
+// 		vn.Connections = append(vn.Connections, edge)
+// 	}
+// 	for _, net := range summaryData.EgressConnection {
+// 		if net.Labels == "" {
+// 			continue
+// 		}
+// 		edgeColor := getEdgeColor(net.Protocol)
+// 		dst := net.Labels
+// 		src := summaryData.Label
+// 		edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : %s/%s\n", src, edgeColor, dst, net.Protocol, net.Port)
+// 		vn.Connections = append(vn.Connections, edge)
+// 	}
+// 	vn.Connections = utils.RemoveDuplication(vn.Connections)
+// }
 
 // ConvertSysJSONToImage converts the summary system JSON data to a plantuml image
 func ConvertSysJSONToImage(jsonFile string, output string) error {
@@ -305,7 +397,7 @@ func ConvertSysJSONToImage(jsonFile string, output string) error {
 }
 
 // ConvertNetworkJSONToImage converts the summary network JSON data to a plantuml image
-func ConvertNetworkJSONToImage(jsonFile string, output string) error {
+func ConvertNetworkJSONToImage(jsonFile_old string, jsonFile_new string, output string) error {
 	klog.Info("Cheking Dependencies...")
 	// Check if java is installed
 	_, b := exe.CheckCmdIsExist("java")
@@ -318,16 +410,23 @@ func ConvertNetworkJSONToImage(jsonFile string, output string) error {
 		return fmt.Errorf("Error: plantuml.jar not installed")
 	}
 
-	// get summary data from json file
-	klog.Infoln("Parsing Summary Data...")
-	sd := ParseSummaryData(jsonFile)
-	if sd == nil {
-		return fmt.Errorf("Error: SummaryData is nil")
+	// get old summary data from old json file
+	klog.Infoln("Parsing Old Summary Data...")
+	sd_olds := ParseSummaryData(jsonFile_old)
+	if sd_olds == nil {
+		return fmt.Errorf("Error: Old SummaryData is nil")
+	}
+
+	// get new summary data from new json file
+	klog.Infoln("Parsing New Summary Data...")
+	sd_news := ParseSummaryData(jsonFile_new)
+	if sd_news == nil {
+		return fmt.Errorf("Error: New SummaryData is nil")
 	}
 
 	// parse visual network connections data from summary data
 	klog.Infoln("Parsing Visual Network Connections Data...")
-	vnd := ParseNetworkData(sd)
+	vnd := ParseNetworkData(sd_olds, sd_news)
 	if vnd == nil {
 		return fmt.Errorf("Error: VisualNetworkData is nil")
 	}

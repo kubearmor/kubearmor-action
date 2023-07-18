@@ -40,13 +40,31 @@ runs:
       env:
         GOPATH: ${{ runner.workspace }}
         GO111MODULE: "on"
-    # # Install kubearmor components
-    # - name: Install kubearmor components
-    #   uses: zhy76/kubearmor-action/actions/install-kubearmor@dev
-    # - name: get pod
-    #   run: kubectl get po -A
-    #   shell: bash
-    # # Diff system and network behaviour reportExcuting the main logic of kubearmor-action by invoke binary file
+    # Install kubearmor components
+    - name: Install kubearmor components
+      uses: zhy76/kubearmor-action/actions/install-kubearmor@dev
+    - name: get pod
+      run: kubectl get po -A
+      shell: bash
+    # Deploy the old app
+    - name: Deploy the old app
+      run: kubectl apply -f ${{ inputs.old-app }}
+      shell: bash
+    # Check all pods are ready, if not, get reason
+    - name: Check all pods are ready, if not, get reason
+      uses: zhy76/kubearmor-action/actions/k8s-client@dev
+    # Delete the old app
+    - name: Delete the old app
+      run: kubectl delete -f ${{ inputs.old-app }}
+      shell: bash
+    # Deploy the new app
+    - name: Deploy the new app
+      run: kubectl apply -f https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.head_commit.id }}/${{ inputs.new-app }}
+      shell: bash
+    # Check all pods are ready, if not, get reason
+    - name: Check all pods are ready, if not, get reason
+      uses: zhy76/kubearmor-action/actions/k8s-client@dev
+    # Diff system and network behaviour report
     # - name: Diff system and network behaviour report
     #   uses: zhy76/kubearmor-action/actions/diff-report@dev
     #   env:
