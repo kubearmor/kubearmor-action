@@ -1,0 +1,90 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Authors of KubeArmor
+
+name: 'kubearmor-action'
+description: 'kubearmor-action'
+inputs:
+  old-app:  # old app manifests address
+    description: 'Old app manifests address'
+    required: true
+  new-app:  # new app manifests address
+    description: 'New app manifests address'
+    required: true
+  namespace: # namespace of the app
+    description: 'Namespace of the app'
+    required: true
+  app-name:  # app name to filter, if not set, will show all apps
+    description: 'App name to filter, if not set, will show all apps'
+    required: flase
+    default: ''
+outputs:
+  visualisation-results-artifact:
+    description: The name of the artifact containing the visualisation report
+    value: ${{ steps.output-results.outputs.visualisation-artifact }}
+  sys-visualisation-image:
+    description: The name of the actual file in the artifact, which contains the system visualisation report
+    value: ${{ steps.output-results.outputs.sys-visualisation-image }}
+  network-visualisation-image:
+    description: The name of the actual file in the artifact, which contains the network visualisation report
+    value: ${{ steps.output-results.outputs.network-visualisation-image }}
+    
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        repository: zhy76/kubearmor-action
+        ref: dev
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
+      env:
+        GOPATH: ${{ runner.workspace }}
+        GO111MODULE: "on"
+    # Install kubearmor components
+    - name: Install kubearmor components
+      uses: zhy76/kubearmor-action/actions/install-kubearmor@dev
+    - name: get pod
+      run: kubectl get po -A
+      shell: bash
+    # Deploy the old app
+    - name: Deploy the old app
+      run: kubectl apply -f ${{ inputs.old-app }}
+      shell: bash
+    # Check all pods are ready, if not, get reason
+    - name: Check all pods are ready, if not, get reason
+      uses: zhy76/kubearmor-action/actions/k8s-client@dev
+    # Save the old app summary baseline
+    - name: Save the old app summary baseline
+      run: sleep 40 && karmor summary -n ${{ inputs.namespace }} -o json > baseline.json && cat baseline.json
+      shell: bash
+    # Delete the old app
+    - name: Delete the old app
+      run: kubectl delete -f ${{ inputs.old-app }}
+      shell: bash
+    # Deploy the new app
+    - name: Deploy the new app
+      run: kubectl apply -f https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.head_commit.id }}/${{ inputs.new-app }}
+      shell: bash
+    # Check all pods are ready, if not, get reason
+    - name: Check all pods are ready, if not, get reason
+      uses: zhy76/kubearmor-action/actions/k8s-client@dev
+    # Save the new app summary baseline
+    - name: Save the new app summary baseline
+      run: sleep 40 && karmor summary -n ${{ inputs.namespace }} -o json > updated.json && cat updated.json
+      shell: bash
+    # System and network visualisation report
+    - name: System and network visualisation report
+      uses: zhy76/kubearmor-action/actions/visual-report@dev
+      env:
+        # pass inputs to env FYI: https://github.com/actions/runner/issues/665
+        APP_NAME: ${{ inputs.app-name }}
+    - name: Set visualisation outputs
+      id: output-results
+      run: |
+        echo "::set-output name=visualisation-artifact::app_visulisation"
+        echo "::set-output name=sys-visualisation-image::app_sys_${{ github.event.head_commit.id }}.png"
+        echo "::set-output name=network-visualisation-image::app_network_${{ github.event.head_commit.id }}.png"
+      shell: bash
