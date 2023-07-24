@@ -11,11 +11,10 @@ import (
 )
 
 const (
-	OldAppTemplateFilePath     = "./template/app-old.yaml"        // Path to the old app template yaml file
-	NewAppTemplateFilePath     = "./template/app-new.yaml"        // Path to the new app template yaml file
-	OldAppImagePlaceholderName = "old-app-image-name-placeholder" // The old app image placeholder name to be changed
-	NewAppImagePlaceholderName = "new-app-image-name-placeholder" // The new app image placeholder name to be changed
-	AppNamespace               = "app"                            // Namespace is the default namespace of the app
+	OldAppTemplateFilePath = "./template/app-old.yaml" // Path to the old app template yaml file
+	NewAppTemplateFilePath = "./template/app-new.yaml" // Path to the new app template yaml file
+	AppNamespace           = "app"                     // Namespace is the default namespace of the app
+	LOCALHOST              = "127.0.0.1"               // Localhost IP address
 )
 
 const (

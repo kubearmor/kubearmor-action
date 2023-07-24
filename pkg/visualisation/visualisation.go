@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/kubearmor/kubearmor-action/common"
 	"github.com/kubearmor/kubearmor-action/utils"
@@ -55,7 +56,7 @@ func ParseSummaryData(path string) []*SummaryData {
 }
 
 // ParseSysData parses the summary data and returns a VisualSysData object
-func ParseSysData(summaryDatas []*SummaryData) *VisualSysData {
+func ParseSysData(summaryDatas []*SummaryData, appName string) *VisualSysData {
 	if len(summaryDatas) == 0 {
 		return nil
 	}
@@ -68,6 +69,13 @@ func ParseSysData(summaryDatas []*SummaryData) *VisualSysData {
 	vs.FileData = make(map[string]string)
 	vs.NetworkData = make(map[string]map[string]string)
 	for _, sd := range summaryDatas {
+		// filter by appName
+		if appName != "" {
+			if !strings.Contains(sd.PodName, appName) {
+				continue
+			}
+			vs.AppName = appName
+		}
 		getLabel(sd, vs)
 		// Get Processes Produced
 		handle_psfile_set(sd, vs, "Process")
@@ -117,7 +125,7 @@ func handle_network_set(summaryData *SummaryData, vs *VisualSysData) {
 }
 
 // Convert a VisualNetworkData object to a PlantUML format and save it in net.puml
-func ConvertVndToPlantUML(vnd *VisualNetworkData) error {
+func ConvertVndToPlantUML(vnd *VisualNetworkData, appName string) error {
 	// Create a file named net.puml
 	file, err := os.Create(PWD + "net.puml") // #nosec
 	if err != nil {
@@ -132,13 +140,17 @@ func ConvertVndToPlantUML(vnd *VisualNetworkData) error {
 	}
 
 	// Loop over the NsLabels and write the package and labels
-	for ns, labels := range vnd.NsLabels {
+	for ns, ips := range vnd.NsIps {
 		_, err = file.WriteString(fmt.Sprintf("package \"namespace: %s\" {\n", ns))
 		if err != nil {
 			return err
 		}
-		for _, label := range labels {
-			_, err = file.WriteString(fmt.Sprintf("[%s] #Lightblue\n", label))
+		for _, ip := range ips {
+			color := "Lightblue"
+			if strings.Contains(ip, appName) {
+				color = "Orange"
+			}
+			_, err = file.WriteString(fmt.Sprintf("[%s] #%s\n", ip, color))
 			if err != nil {
 				return err
 			}
@@ -179,28 +191,31 @@ type connectionValue struct {
 	kind int
 }
 
-func ParseNetworkData(sd_olds, sd_news []*SummaryData) *VisualNetworkData {
-	// if len(sd_olds) == 0 {
-	// 	return nil
-	// }
+func ParseNetworkData(sd_olds, sd_news []*SummaryData, appName string) *VisualNetworkData {
+	if len(sd_news) == 0 {
+		return nil
+	}
+	nsips_old := make(map[string][]string, 0)
+	nsips_new := make(map[string][]string, 0)
+	ips := make(map[string]bool, 0)
 	cds_old := make(map[connectionKey]connectionValue, 0)
 	cds_new := make(map[connectionKey]connectionValue, 0)
 	cds_merged := make(map[connectionKey]connectionValue, 0)
 
 	vn := &VisualNetworkData{}
-	vn.NsLabels = make(map[string][]string)
+	vn.NsIps = make(map[string][]string)
 	for _, sd_old := range sd_olds {
 		// Get Namespace Labels
-		getNsLabels(sd_old, vn)
+		getNsIps(sd_old, nsips_old)
 		// Get Different Network Connections
-		getDiffConnectionData(sd_old, cds_old)
+		getDiffConnectionData(sd_old, cds_old, appName)
 	}
 
 	for _, sd_new := range sd_news {
 		// Get Namespace Labels
-		getNsLabels(sd_new, vn)
+		getNsIps(sd_new, nsips_new)
 		// Get Different Network Connections
-		getDiffConnectionData(sd_new, cds_new)
+		getDiffConnectionData(sd_new, cds_new, appName)
 	}
 
 	// merge the connections
@@ -213,6 +228,9 @@ func ParseNetworkData(sd_olds, sd_news []*SummaryData) *VisualNetworkData {
 			// if exists in new, means added
 			cds_merged[k] = connectionValue{edgeColor: "red", kind: 1}
 		}
+		// add ips to the ips map, to filter nsips
+		ips[k.src] = true
+		ips[k.dst] = true
 	}
 	// check for deleted connections
 	for k := range cds_old {
@@ -221,6 +239,9 @@ func ParseNetworkData(sd_olds, sd_news []*SummaryData) *VisualNetworkData {
 			// if exists in old, but not in new, means deleted
 			cds_merged[k] = connectionValue{edgeColor: "red", kind: -1}
 		}
+		// add ips to the ips map, to filter nsips
+		ips[k.src] = true
+		ips[k.dst] = true
 	}
 	// write the connections to the vn
 	for k, v := range cds_merged {
@@ -240,28 +261,43 @@ func ParseNetworkData(sd_olds, sd_news []*SummaryData) *VisualNetworkData {
 			vn.Connections = append(vn.Connections, edge)
 		}
 	}
+	// filter nsips by ips
+	for ns, ipss := range nsips_old {
+		for _, ip := range ipss {
+			if _, ok := ips[ip]; ok {
+				vn.NsIps[ns] = append(vn.NsIps[ns], ip)
+			}
+		}
+	}
+	for ns, ipss := range nsips_new {
+		for _, ip := range ipss {
+			if _, ok := ips[ip]; ok {
+				vn.NsIps[ns] = append(vn.NsIps[ns], ip)
+			}
+		}
+	}
 	return vn
 }
 
-func getNsLabels(summaryData *SummaryData, vn *VisualNetworkData) {
-	label := summaryData.Label
-	if summaryData.Label == "" {
-		label = "default"
+func getNsIps(summaryData *SummaryData, nsips map[string][]string) {
+	if summaryData.PodName == "" {
+		return
 	}
 
-	nslb := vn.NsLabels
+	pod := "pod/" + summaryData.PodName
+
 	// if namespace exists
-	if _, ok := nslb[summaryData.Namespace]; ok {
-		for _, lb := range nslb[summaryData.Namespace] {
-			if lb == label {
+	if _, ok := nsips[summaryData.Namespace]; ok {
+		for _, ip := range nsips[summaryData.Namespace] {
+			if ip == pod {
 				return
 			}
 		}
-		nslb[summaryData.Namespace] = append(nslb[summaryData.Namespace], label)
+		nsips[summaryData.Namespace] = append(nsips[summaryData.Namespace], pod)
 		return
 	}
 	// if namespace does not exist
-	vn.NsLabels[summaryData.Namespace] = append([]string(nil), label)
+	nsips[summaryData.Namespace] = append([]string(nil), pod)
 }
 
 func getEdgeColor(protocol string) string {
@@ -276,29 +312,37 @@ func getEdgeColor(protocol string) string {
 	}
 }
 
-func getDiffConnectionData(sd *SummaryData, cds map[connectionKey]connectionValue) {
-	if sd.Label == "" {
+func getDiffConnectionData(sd *SummaryData, cds map[connectionKey]connectionValue, appName string) {
+	if sd.PodName == "" {
 		return
 	}
 
 	for _, net := range sd.IngressConnection {
-		if net.Labels == "" {
+		if net.IP == "" || net.IP == common.LOCALHOST {
 			continue
 		}
-		dst := sd.Label
-		src := net.Labels
+		dst := "pod/" + sd.PodName
+		src := net.IP
 		ck := connectionKey{src: src, dst: dst, protocol: net.Protocol, port: net.Port}
 		cv := connectionValue{edgeColor: getEdgeColor(net.Protocol), kind: 0}
+		// filter by appName
+		if appName != "" && !strings.Contains(src, appName) && !strings.Contains(dst, appName) {
+			continue
+		}
 		cds[ck] = cv
 	}
 	for _, net := range sd.EgressConnection {
-		if net.Labels == "" {
+		if net.IP == "" || net.IP == common.LOCALHOST {
 			continue
 		}
-		dst := net.Labels
-		src := sd.Label
+		dst := net.IP
+		src := "pod/" + sd.PodName
 		ck := connectionKey{src: src, dst: dst, protocol: net.Protocol, port: net.Port}
 		cv := connectionValue{edgeColor: getEdgeColor(net.Protocol), kind: 0}
+		// filter by appName
+		if appName != "" && !strings.Contains(src, appName) && !strings.Contains(dst, appName) {
+			continue
+		}
 		cds[ck] = cv
 	}
 }
@@ -331,7 +375,7 @@ func getDiffConnectionData(sd *SummaryData, cds map[connectionKey]connectionValu
 // }
 
 // ConvertSysJSONToImage converts the summary system JSON data to a plantuml image
-func ConvertSysJSONToImage(jsonFile string, output string) error {
+func ConvertSysJSONToImage(jsonFile string, output string, appName string) error {
 	klog.Infoln("Cheking Dependencies...")
 	// Check if java is installed
 	_, b := exe.CheckCmdIsExist("java")
@@ -353,7 +397,7 @@ func ConvertSysJSONToImage(jsonFile string, output string) error {
 
 	// parse visual sys data from summary data
 	klog.Infoln("Parsing Visual System Data...")
-	vsd := ParseSysData(sd)
+	vsd := ParseSysData(sd, appName)
 	if vsd == nil {
 		return fmt.Errorf("Error: VisualSysData is nil")
 	}
@@ -377,7 +421,7 @@ func ConvertSysJSONToImage(jsonFile string, output string) error {
 	}
 
 	klog.Infoln("Creating Image...")
-	s, err := exe.RunSimpleCmd("java -jar " + PWD + "./plantuml.jar " + PWD + "/sys.puml -output ./")
+	s, err := exe.RunSimpleCmd("java -jar -DPLANTUML_LIMIT_SIZE=100000 -Xmx8096m " + PWD + "./plantuml.jar " + PWD + "/sys.puml -output ./")
 	klog.Infoln(s)
 	if err != nil {
 		return err
@@ -397,7 +441,7 @@ func ConvertSysJSONToImage(jsonFile string, output string) error {
 }
 
 // ConvertNetworkJSONToImage converts the summary network JSON data to a plantuml image
-func ConvertNetworkJSONToImage(jsonFile_old string, jsonFile_new string, output string) error {
+func ConvertNetworkJSONToImage(jsonFile_old string, jsonFile_new string, output string, appName string) error {
 	klog.Info("Cheking Dependencies...")
 	// Check if java is installed
 	_, b := exe.CheckCmdIsExist("java")
@@ -426,20 +470,20 @@ func ConvertNetworkJSONToImage(jsonFile_old string, jsonFile_new string, output 
 
 	// parse visual network connections data from summary data
 	klog.Infoln("Parsing Visual Network Connections Data...")
-	vnd := ParseNetworkData(sd_olds, sd_news)
+	vnd := ParseNetworkData(sd_olds, sd_news, appName)
 	if vnd == nil {
 		return fmt.Errorf("Error: VisualNetworkData is nil")
 	}
 
 	// Create plantuml file
 	klog.Infoln("Creating PlantUML File...")
-	err := ConvertVndToPlantUML(vnd)
+	err := ConvertVndToPlantUML(vnd, appName)
 	if err != nil {
 		return err
 	}
 
 	klog.Infoln("Creating Image...")
-	s, err := exe.RunSimpleCmd("java -jar " + PWD + "./plantuml.jar " + PWD + "/net.puml -output ./")
+	s, err := exe.RunSimpleCmd("java -jar -DPLANTUML_LIMIT_SIZE=100000 -Xmx8096m " + PWD + "./plantuml.jar " + PWD + "/net.puml -output ./")
 	klog.Infoln(s)
 	if err != nil {
 		return err

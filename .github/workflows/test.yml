@@ -20,6 +20,7 @@ jobs:
         with:
           old-app: 'https://raw.githubusercontent.com/kubearmor/KubeArmor/main/examples/wordpress-mysql/wordpress-mysql-deployment.yaml'
           new-app: 'manifests/app.yaml'
+          app-name: 'cassandra'
       - uses: actions/download-artifact@v2
         with:
           name: ${{ steps.visualisation-report.outputs.visualisation-results-artifact }}

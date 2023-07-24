@@ -72,7 +72,7 @@
     "IngressConnection": [{
         "Protocol": "UDP",
         "Command": "/usr/sbin/mysqld",
-        "IP": "pod/wordpress-c4bf5b44b-4pl25",
+        "IP": "pod/wordpress-5df4cd65d5-l2zl2",
         "Port": "3306",
         "Labels": "app=wordpress",
         "Count": "1",

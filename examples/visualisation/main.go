@@ -12,17 +12,18 @@ import (
 
 func main() {
 	// jsonFile is the name of the JSON file that you shared with me
-	old_jsonFile := common.GetWorkDir() + "/test/testdata/old-summary-data.json"
-	new_jsonFile := common.GetWorkDir() + "/test/testdata/new-summary-data.json"
+	old_jsonFile := common.GetWorkDir() + "/test/testdata/test.json"
+	new_jsonFile := common.GetWorkDir() + "/test/testdata/test.json"
 
 	// sd := visual.ParseSummaryData(jsonFile)
 	// vnd := visual.ParseNetworkData(sd)
 	// fmt.Println(vnd)
-	err := visual.ConvertNetworkJSONToImage(old_jsonFile, new_jsonFile, "test.png")
+	appName := "cassandra"
+	err := visual.ConvertNetworkJSONToImage(old_jsonFile, new_jsonFile, "test.png", "")
 	if err != nil {
 		fmt.Println("Network-Visualisation Error:", err)
 	}
-	err = visual.ConvertSysJSONToImage(new_jsonFile, "test2.png")
+	err = visual.ConvertSysJSONToImage(new_jsonFile, "test2.png", appName)
 	if err != nil {
 		fmt.Println("System-Visualisation Error:", err)
 	}

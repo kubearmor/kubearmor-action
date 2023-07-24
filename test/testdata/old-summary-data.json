@@ -86,10 +86,10 @@
         "Count": "1",
         "UpdatedTime": "Mon Jul  3 08:26:43 UTC 2023"
     }]
-},
+}, 
 {
     "DeploymentName": "wordpress-5df4cd65d5",
-    "PodName": "wordpress-5df4cd65d5-l2zl2",
+    "PodName": "wordpress-c4bf5b44b-4pl25",
     "ClusterName": "default",
     "Namespace": "worpress-mysql",
     "Label": "app=wordpress",

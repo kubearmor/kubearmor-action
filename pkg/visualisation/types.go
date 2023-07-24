@@ -56,6 +56,7 @@ type EgressConnection struct {
 type VisualSysData struct {
 	Name        string                       `json:"Name"`
 	Namespace   string                       `json:"Namespace"`
+	AppName     string                       `json:"AppName"`
 	Labels      []string                     `json:"Labels,omitempty"`
 	ProcessData map[string]map[string]string `json:"Process,omitempty"`
 	FileData    map[string]string            `json:"File,omitempty"`
@@ -64,17 +65,17 @@ type VisualSysData struct {
 
 type VisualNetworkData struct {
 	/**
-	 * 1. NsLabels, eg.:
+	 * 1. NsIps, eg.:
 	 	package "namespace: default" {
-			[app: emailservice] #Lightblue
-			[app: paymentservice] #Lightblue
+			[pod/sd-ran-consensus-1] #Lightblue
+			[pod/sd-ran-consensus-2] #Lightblue
 	 	}
 	*/
-	NsLabels map[string][]string // Array of :namespace -> [label1 #color, label2 #color, ...]
+	NsIps map[string][]string // Array of :namespace -> [Ip1 #color, Ip2 #color, ...]
 	/**
 	 * 2. Connections, eg.:
-	 	[app: checkoutservice] -[#blue]-> [app: emailservice] : TCP/8080
-		[app: recommendationservice] -[#blue]-> [app: productcatalogservice] : TCP/3550
+	 	[pod/sd-ran-consensus-1] -[#blue]-> [pod/sd-ran-consensus-2] : TCP/8080
+		[pod/calico-node-ztkhd] -[#blue]-> [pod/sd-ran-consensus-2] : TCP/3550
 	*/
 	Connections []string // Array of: [source] -[#blue]-> [destination] : protocol/port
 }

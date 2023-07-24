@@ -4,8 +4,10 @@
 package cmd
 
 var (
-	jsonFile string
-	oldFile  string
-	newFile  string
-	output   string
+	jsonFile  string
+	oldFile   string
+	newFile   string
+	appName   string
+	sysOutput string
+	netOutput string
 )
