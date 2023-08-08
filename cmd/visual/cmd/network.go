@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	visual "github.com/kubearmor/kubearmor-action/pkg/visualisation"
+	"github.com/kubearmor/kubearmor-action/utils"
 	"github.com/spf13/cobra"
 	"k8s.io/klog"
 )
@@ -27,16 +28,24 @@ var networkCmd = &cobra.Command{
 		}
 
 		fmt.Println("old file:", oldFile)
-		oldFile, err := filepath.Abs(oldFile)
-		if err != nil {
-			klog.Fatalf("Error: getting absolute path of 'oldFile' flag: %v", err)
+		// Check is URL
+		var err error
+		if !utils.CheckIsURL(oldFile) {
+			oldFile, err = filepath.Abs(oldFile)
+			if err != nil {
+				klog.Fatalf("Error: getting absolute path of 'oldFile' flag: %v", err)
+			}
 		}
 
 		fmt.Println("new file:", newFile)
-		newFile, err := filepath.Abs(newFile)
-		if err != nil {
-			klog.Fatalf("Error: getting absolute path of 'newFile' flag: %v", err)
+		// Check is URL
+		if !utils.CheckIsURL(newFile) {
+			newFile, err = filepath.Abs(newFile)
+			if err != nil {
+				klog.Fatalf("Error: getting absolute path of 'newFile' flag: %v", err)
+			}
 		}
+
 		fmt.Println("app name:", appName)
 		err = visual.ConvertNetworkJSONToImage(oldFile, newFile, netOutput, appName)
 		if err != nil {

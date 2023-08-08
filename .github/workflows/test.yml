@@ -2,9 +2,9 @@ name: test
 
 on:
   push:
-    branches: [main,dev]
+    branches: [main,visual]
   pull_request:
-    branches: [main,dev]
+    branches: [main,visual]
 permissions:
     pull-requests: write
     contents: write
@@ -14,24 +14,66 @@ jobs:
     runs-on: ubuntu-latest
     name: A job to test kubearmor-action
     steps:
-      - name: kubearmor-action test
-        id: visualisation-report
-        uses: zhy76/kubearmor-action@dev
+      # Setup Go
+      - name: Setup Go
+        uses: actions/setup-go@v4
         with:
-          old-app: 'https://raw.githubusercontent.com/kubearmor/KubeArmor/main/examples/wordpress-mysql/wordpress-mysql-deployment.yaml'
-          new-app: 'manifests/app.yaml'
-          namespace: 'wordpress-mysql'
-          app-name: 'wordpress'
+          go-version: '1.20'
+        env:
+          GOPATH: ${{ runner.workspace }}
+          GO111MODULE: "on"
+      # Checkout the repo
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: zhy76/kubearmor-action
+          ref: visual
+      # Install k3s cluster
+      - name: Setup k3s cluster
+        uses: zhy76/kubearmor-action/actions/setup-k3s-cluster@visual
+      # Install kubearmor components
+      - name: Install kubearmor components
+        uses: zhy76/kubearmor-action/actions/install-kubearmor@visual
+      # Show pods info
+      - name: Get pod
+        run: kubectl get po -A
+      # Deploy the new app
+      - name: Deploy the new app
+        run: kubectl apply -f https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.head_commit.id }}/test/testdata/sock-shop.yaml
+      # Check all pods are ready, if not, get reason
+      - name: Check all pods are ready, if not, get reason
+        uses: zhy76/kubearmor-action/actions/check-pods-ready@visual
+      # Save the new app summary report
+      - name: Save the new app summary report
+        uses: zhy76/kubearmor-action/actions/save-summary-report@visual
+        id: save-summary-report
+        with:
+          namespace: 'sock-shop'
+          file: 'summary-test.json'
+      # Delete the new app
+      - name: Delete the new app
+        run: kubectl delete -f https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.head_commit.id }}/test/testdata/sock-shop.yaml
+      - name: Kubearmor-action visualisation
+        id: visualisation-report
+        uses: zhy76/kubearmor-action/actions/visual-report@visual
+        with:
+          old-summary-path: 'https://raw.githubusercontent.com/zhy76/kubearmor-action/dev/test/testdata/old-summary-data.json'
+          new-summary-path: '${{ github.workspace }}/${{ steps.save-summary-report.outputs.summary-report-file }}'
+          namespace: 'sock-shop'
+          app-name: 'session-db'
+      # Get the visualisation results
       - uses: actions/download-artifact@v2
         with:
           name: ${{ steps.visualisation-report.outputs.visualisation-results-artifact }}
           path: images
+      # Store the visualisation results
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./images
           keep_files: true
-      - name: comment PR
+      # Comment the visualisation results on the PR
+      - name: Comment on PR
         run: |
           gh pr comment  ${{ github.event.number }} -b"![system_graph](https://raw.githubusercontent.com/${{ github.repository }}/gh-pages/${{ steps.visualisation-report.outputs.sys-visualisation-image }})"
           gh pr comment  ${{ github.event.number }} -b"![network_graph](https://raw.githubusercontent.com/${{ github.repository }}/gh-pages/${{ steps.visualisation-report.outputs.network-visualisation-image }})"

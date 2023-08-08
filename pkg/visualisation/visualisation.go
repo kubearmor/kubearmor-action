@@ -28,8 +28,9 @@ func ParseSummaryData(path string) []*SummaryData {
 	// err is an error variable that will store any error that occurs during the reading or parsing process
 	var err error
 
-	// os.ReadFile is a function that takes a file name and returns its content as a byte array and an error value
-	data, err = os.ReadFile(path) // #nosec
+	// ReadFile reads the file from the given address and returns it as a []byte array.
+	// It can handle both remote urls and local paths.
+	data, err = utils.ReadFile(path) // #nosec
 
 	// if err is not nil, it means there was an error during the reading process
 	if err != nil {
@@ -346,33 +347,6 @@ func getDiffConnectionData(sd *SummaryData, cds map[connectionKey]connectionValu
 		cds[ck] = cv
 	}
 }
-
-// func getConnectionData(summaryData *SummaryData, vn *VisualNetworkData) {
-// 	if summaryData.Label == "" {
-// 		return
-// 	}
-// 	for _, net := range summaryData.IngressConnection {
-// 		if net.Labels == "" {
-// 			continue
-// 		}
-// 		edgeColor := getEdgeColor(net.Protocol)
-// 		dst := summaryData.Label
-// 		src := net.Labels
-// 		edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : %s/%s\n", src, edgeColor, dst, net.Protocol, net.Port)
-// 		vn.Connections = append(vn.Connections, edge)
-// 	}
-// 	for _, net := range summaryData.EgressConnection {
-// 		if net.Labels == "" {
-// 			continue
-// 		}
-// 		edgeColor := getEdgeColor(net.Protocol)
-// 		dst := net.Labels
-// 		src := summaryData.Label
-// 		edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : %s/%s\n", src, edgeColor, dst, net.Protocol, net.Port)
-// 		vn.Connections = append(vn.Connections, edge)
-// 	}
-// 	vn.Connections = utils.RemoveDuplication(vn.Connections)
-// }
 
 // ConvertSysJSONToImage converts the summary system JSON data to a plantuml image
 func ConvertSysJSONToImage(jsonFile string, output string, appName string) error {

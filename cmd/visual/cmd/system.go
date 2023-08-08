@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	visual "github.com/kubearmor/kubearmor-action/pkg/visualisation"
+	"github.com/kubearmor/kubearmor-action/utils"
 	"github.com/spf13/cobra"
 	"k8s.io/klog"
 )
@@ -22,10 +23,15 @@ var systemCmd = &cobra.Command{
 			klog.Fatalf("Error: 'file' flag is not set")
 		}
 		fmt.Println("file:", jsonFile)
-		jsonFile, err := filepath.Abs(jsonFile)
-		if err != nil {
-			klog.Fatalf("Error: getting absolute path of 'file' flag: %v", err)
+		// Check is URL
+		var err error
+		if !utils.CheckIsURL(jsonFile) {
+			jsonFile, err = filepath.Abs(jsonFile)
+			if err != nil {
+				klog.Fatalf("Error: getting absolute path of 'file' flag: %v", err)
+			}
 		}
+
 		fmt.Println("app name:", appName)
 		err = visual.ConvertSysJSONToImage(jsonFile, sysOutput, appName)
 		if err != nil {

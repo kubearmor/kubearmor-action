@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Authors of KubeArmor
+
+name: 'save summary report'
+description: 'save summary report'
+inputs:
+  file:  # the summary report file name
+    description: 'The summary report file name'
+    required: false
+    default: 'summary.json'
+  namespace: # namespace of the app
+    description: 'Namespace of the app'
+    required: true
+outputs:
+  summary-report-artifact:
+    description: The name of the artifact containing the summary report
+    value: ${{ steps.output-results.outputs.summary-artifact }}
+  summary-report-file:
+    description: The name of the actual file in the artifact, which contains the summary report
+    value: ${{ steps.output-results.outputs.summary-report-file }}
+
+runs:
+  using: composite
+  steps:    
+    - name: Get summary report
+      run: |
+        echo ${PWD}
+        karmor summary -n ${{ inputs.namespace }} -o json > ${{ inputs.file }} && cat ${{ inputs.file }}
+      shell: bash
+    - name: Upload summary report
+      id: upload-summary-report
+      uses: actions/upload-artifact@v2
+      with:
+        name: summary_report
+        path: |
+          ${{ inputs.file }}
+    - name: Set summary report outputs
+      id: output-results
+      run: |
+        echo "::set-output name=summary-artifact::summary_report"
+        echo "::set-output name=summary-report-file::${{ inputs.file }}"
+      shell: bash
