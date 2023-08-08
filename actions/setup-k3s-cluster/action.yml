@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Authors of KubeArmor
+
+name: 'install kubearmor components'
+description: 'install kubearmor components'
+runs:
+  using: composite
+  steps:    
+    - name: Setup a Kubernetes environment
+      run: echo ${PWD} && hack/install-k3s.sh
+      shell: bash
+    - name: Test connectivity
+      run: kubectl get no
+      shell: bash
