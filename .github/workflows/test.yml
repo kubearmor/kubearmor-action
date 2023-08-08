@@ -25,9 +25,7 @@ jobs:
       # Checkout the repo
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          repository: kubearmor/kubearmor-action
-          ref: main
+
       # Install k3s cluster
       - name: Setup k3s cluster
         uses: kubearmor/kubearmor-action/actions/setup-k3s-cluster@main
@@ -39,7 +37,7 @@ jobs:
         run: kubectl get po -A
       # Deploy the new app
       - name: Deploy the new app
-        run: kubectl apply -f https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.head_commit.id }}/test/testdata/sock-shop.yaml
+        run: kubectl apply -f ./test/testdata/sock-shop.yaml
       # Check all pods are ready, if not, get reason
       - name: Check all pods are ready, if not, get reason
         uses: kubearmor/kubearmor-action/actions/check-pods-ready@main
@@ -52,7 +50,7 @@ jobs:
           file: 'summary-test.json'
       # Delete the new app
       - name: Delete the new app
-        run: kubectl delete -f https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.head_commit.id }}/test/testdata/sock-shop.yaml
+        run: kubectl delete -f ./test/testdata/sock-shop.yaml
       - name: Kubearmor-action visualisation
         id: visualisation-report
         uses: kubearmor/kubearmor-action/actions/visual-report@main
