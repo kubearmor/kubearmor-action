@@ -1,0 +1,81 @@
+name: test
+
+on:
+  push:
+    branches: [main,visual]
+  pull_request:
+    branches: [main,visual]
+permissions:
+    pull-requests: write
+    contents: write
+
+jobs:
+  test_job:
+    runs-on: ubuntu-latest
+    name: A job to test kubearmor-action
+    steps:
+      # Setup Go
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+        env:
+          GOPATH: ${{ runner.workspace }}
+          GO111MODULE: "on"
+      # Checkout the repo
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: kubearmor/kubearmor-action
+          ref: main
+      # Install k3s cluster
+      - name: Setup k3s cluster
+        uses: kubearmor/kubearmor-action/actions/setup-k3s-cluster@main
+      # Install kubearmor components
+      - name: Install kubearmor components
+        uses: kubearmor/kubearmor-action/actions/install-kubearmor@main
+      # Show pods info
+      - name: Get pod
+        run: kubectl get po -A
+      # Deploy the new app
+      - name: Deploy the new app
+        run: kubectl apply -f https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.head_commit.id }}/test/testdata/sock-shop.yaml
+      # Check all pods are ready, if not, get reason
+      - name: Check all pods are ready, if not, get reason
+        uses: kubearmor/kubearmor-action/actions/check-pods-ready@main
+      # Save the new app summary report
+      - name: Save the new app summary report
+        uses: kubearmor/kubearmor-action/actions/save-summary-report@main
+        id: save-summary-report
+        with:
+          namespace: 'sock-shop'
+          file: 'summary-test.json'
+      # Delete the new app
+      - name: Delete the new app
+        run: kubectl delete -f https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.head_commit.id }}/test/testdata/sock-shop.yaml
+      - name: Kubearmor-action visualisation
+        id: visualisation-report
+        uses: kubearmor/kubearmor-action/actions/visual-report@main
+        with:
+          old-summary-path: 'https://raw.githubusercontent.com/kubearmor/kubearmor-action/dev/test/testdata/old-summary-data.json'
+          new-summary-path: '${{ github.workspace }}/${{ steps.save-summary-report.outputs.summary-report-file }}'
+          namespace: 'sock-shop'
+          app-name: 'session-db'
+      # Get the visualisation results
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ steps.visualisation-report.outputs.visualisation-results-artifact }}
+          path: images
+      # Store the visualisation results
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./images
+          keep_files: true
+      # Comment the visualisation results on the PR
+      - name: Comment on PR
+        run: |
+          gh pr comment  ${{ github.event.number }} -b"![system_graph](https://raw.githubusercontent.com/${{ github.repository }}/gh-pages/${{ steps.visualisation-report.outputs.sys-visualisation-image }})"
+          gh pr comment  ${{ github.event.number }} -b"![network_graph](https://raw.githubusercontent.com/${{ github.repository }}/gh-pages/${{ steps.visualisation-report.outputs.network-visualisation-image }})"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

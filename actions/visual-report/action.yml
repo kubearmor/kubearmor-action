@@ -1,0 +1,65 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Authors of KubeArmor
+
+name: 'system and network visualisation report'
+description: 'system and network visualisation report'
+inputs:
+  old-summary-path:  # old summary report path
+    description: 'Old summary report path'
+    required: true
+  new-summary-path:  # new summary report path
+    description: 'New summary report path'
+    required: true
+  namespace: # namespace of the app
+    description: 'Namespace of the app'
+    required: true
+  app-name:  # app name to filter, if not set, will show all apps
+    description: 'App name to filter, if not set, will show all apps'
+    required: flase
+    default: ''
+outputs:
+  visualisation-results-artifact:
+    description: The name of the artifact containing the visualisation report
+    value: ${{ steps.output-results.outputs.visualisation-artifact }}
+  sys-visualisation-image:
+    description: The name of the actual file in the artifact, which contains the system visualisation report
+    value: ${{ steps.output-results.outputs.sys-visualisation-image }}
+  network-visualisation-image:
+    description: The name of the actual file in the artifact, which contains the network visualisation report
+    value: ${{ steps.output-results.outputs.network-visualisation-image }}
+
+runs:
+  using: composite
+  steps:
+    # system and network visualisation report
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    - name: Install graphviz
+      run: |
+        sudo apt-get install -y graphviz
+      shell: bash
+    - name: Visulisation
+      run: |
+        echo ${PWD} && make build-visual-cli
+        ./visual system -f ${{ inputs.new-summary-path}} --app ${{ inputs.app-name }} -o app_sys_${{ github.event.head_commit.id }}.png
+        ./visual network --old ${{ inputs.old-summary-path }} --new ${{ inputs.new-summary-path }} --app ${{ inputs.app-name }} -o app_network_${{ github.event.head_commit.id }}.png
+      shell: bash
+    - name: Upload image
+      id: app_visulisation
+      uses: actions/upload-artifact@v2
+      with:
+        name: app_visulisation
+        path: |
+          app_sys_${{ github.event.head_commit.id }}.png
+          app_network_${{ github.event.head_commit.id }}.png
+    - name: Set visualisation outputs
+      id: output-results
+      run: |
+        echo "::set-output name=visualisation-artifact::app_visulisation"
+        echo "::set-output name=sys-visualisation-image::app_sys_${{ github.event.head_commit.id }}.png"
+        echo "::set-output name=network-visualisation-image::app_network_${{ github.event.head_commit.id }}.png"
+      shell: bash
+    
