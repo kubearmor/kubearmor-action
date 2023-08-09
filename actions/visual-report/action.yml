@@ -41,11 +41,28 @@ runs:
       run: |
         sudo apt-get install -y graphviz
       shell: bash
-    - name: Visulisation
+    - name: Check app name
+      id: check
+      run: |
+        if [ -z "${{ inputs.app-name }}" ]; then
+          echo "::set-output name=empty::true"
+        else
+          echo "::set-output name=empty::false"
+        fi
+      shell: bash
+    - name: Visulisation with specific app
+      if: steps.check.outputs.empty == 'false'
       run: |
         echo ${PWD} && make build-visual-cli
-        ./visual system -f ${{ inputs.new-summary-path}} --app ${{ inputs.app-name }} -o app_sys_${{ github.event.head_commit.id }}.png
-        ./visual network --old ${{ inputs.old-summary-path }} --new ${{ inputs.new-summary-path }} --app ${{ inputs.app-name }} -o app_network_${{ github.event.head_commit.id }}.png
+        ./visual system -f ${{ inputs.new-summary-path}} --app ${{ inputs.app-name }} -o app_sys_${{ github.event.pull_request.head.sha }}.png
+        ./visual network --old ${{ inputs.old-summary-path }} --new ${{ inputs.new-summary-path }} --app ${{ inputs.app-name }} -o app_network_${{ github.event.pull_request.head.sha }}.png
+      shell: bash
+    - name: Visulisation all apps
+      if: steps.check.outputs.empty == 'true'
+      run: |
+        echo ${PWD} && make build-visual-cli
+        ./visual system -f ${{ inputs.new-summary-path}} -o app_sys_${{ github.event.pull_request.head.sha }}.png
+        ./visual network --old ${{ inputs.old-summary-path }} --new ${{ inputs.new-summary-path }} -o app_network_${{ github.event.pull_request.head.sha }}.png
       shell: bash
     - name: Upload image
       id: app_visulisation
@@ -53,13 +70,13 @@ runs:
       with:
         name: app_visulisation
         path: |
-          app_sys_${{ github.event.head_commit.id }}.png
-          app_network_${{ github.event.head_commit.id }}.png
+          app_sys_${{ github.event.pull_request.head.sha}}.png
+          app_network_${{ github.event.pull_request.head.sha }}.png
     - name: Set visualisation outputs
       id: output-results
       run: |
         echo "::set-output name=visualisation-artifact::app_visulisation"
-        echo "::set-output name=sys-visualisation-image::app_sys_${{ github.event.head_commit.id }}.png"
-        echo "::set-output name=network-visualisation-image::app_network_${{ github.event.head_commit.id }}.png"
+        echo "::set-output name=sys-visualisation-image::app_sys_${{ github.event.pull_request.head.sha }}.png"
+        echo "::set-output name=network-visualisation-image::app_network_${{ github.event.pull_request.head.sha }}.png"
       shell: bash
     
