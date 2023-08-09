@@ -24,11 +24,15 @@ import (
 )
 
 const (
+	// ReadyStatus is the ready status of a pod.
 	ReadyStatus = "Ready"
-	TRUE        = "True"
-	FALSE       = "False"
+	// TRUE is a string for true.
+	TRUE = "True"
+	// FALSE is a string for false.
+	FALSE = "False"
 )
 
+// Client is a kubernetes client.
 type Client struct {
 	// ClientSet is a kubernetes clientset.
 	ClientSet *kubernetes.Clientset
@@ -60,6 +64,7 @@ type EventPod struct {
 	Namespace string
 }
 
+// NewK8sClient creates a new kubernetes client.
 func NewK8sClient() (*Client, error) {
 	kubeconfig := filepath.Join(common.DefaultKubeConfigDir(), "config")
 	if home := homedir.HomeDir(); home != "" {
@@ -90,7 +95,7 @@ func NewK8sClient() (*Client, error) {
 	}, nil
 }
 
-// Creates a namespace.
+// CreateNamespace creates a namespace.
 func (c *Client) CreateNamespace(name string) error {
 	// create a namespace
 	namespace := &v1.Namespace{
@@ -102,6 +107,7 @@ func (c *Client) CreateNamespace(name string) error {
 	return err
 }
 
+// DeleteNamespace deletes a namespace.
 func (c *Client) DeleteNamespace(name string) error {
 	return c.ClientSet.CoreV1().Namespaces().Delete(context.Background(), name, metav1.DeleteOptions{})
 }
@@ -137,7 +143,7 @@ func (c *Client) ListAllNamespacesPods() ([]*NamespacePod, error) {
 	return namespacePodList, nil
 }
 
-// Check if all pods are ready
+// CheckAllPodsReady checks if all pods are ready.
 func (c *Client) CheckAllPodsReady() (bool, error) {
 	namespacePodList, err := c.ListAllNamespacesPods()
 	if err != nil {
@@ -196,7 +202,7 @@ func (c *Client) GetPodEvents(namespace, podName string) ([]v1.Event, error) {
 	return events.Items, nil
 }
 
-// GetPodReadyStatus returns the ready status of a pod.
+// getPodReadyStatus returns the ready status of a pod.
 func (c *Client) getPodReadyStatus(pod v1.Pod) bool {
 	for _, condition := range pod.Status.Conditions {
 		if condition.Type != ReadyStatus {
@@ -242,7 +248,7 @@ func (c *Client) GetNotReadyPodEvent() (map[string][]EventPod, error) {
 	return result, nil
 }
 
-// If exist pod not ready, show pod events and logs
+// OutputNotReadyPodInfo outputs the events of not ready pods.
 func (c *Client) OutputNotReadyPodInfo() error {
 	podEvents, err := c.GetNotReadyPodEvent()
 	if err != nil {
@@ -273,6 +279,7 @@ func (c *Client) OutputNotReadyPodInfo() error {
 	return nil
 }
 
+// WaitAllPodRunning waits for all pods to be ready
 func (c *Client) WaitAllPodRunning() error {
 	time.Sleep(30 * time.Second)
 	err := utils.Retry(10, 5*time.Second, func() error {

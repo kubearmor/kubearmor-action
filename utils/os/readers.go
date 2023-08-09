@@ -13,15 +13,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// FileReader is an interface for reading files
 type FileReader interface {
 	ReadLines() ([]string, error)
 	ReadAll() ([]byte, error)
 }
 
+// fileReader is an implementation of FileReader
 type fileReader struct {
 	fileName string
 }
 
+// ReadLines reads lines from a file
 func (r fileReader) ReadLines() ([]string, error) {
 	var lines []string
 
@@ -49,6 +52,7 @@ func (r fileReader) ReadLines() ([]string, error) {
 	return lines, nil
 }
 
+// ReadAll reads all contents from a file
 func (r fileReader) ReadAll() ([]byte, error) {
 	if _, err := os.Stat(r.fileName); err != nil || os.IsNotExist(err) {
 		return nil, errors.New("no such file")
@@ -72,6 +76,7 @@ func (r fileReader) ReadAll() ([]byte, error) {
 	return content, nil
 }
 
+// NewFileReader returns a new FileReader
 func NewFileReader(fileName string) FileReader {
 	return fileReader{
 		fileName: fileName,

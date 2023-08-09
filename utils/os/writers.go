@@ -8,13 +8,17 @@ import (
 	"path/filepath"
 )
 
+// FileWriter is an interface for writing files
 type FileWriter interface {
 	WriteFile(content []byte) error
 }
+
+// fileWriter is an implementation of FileWriter
 type fileWriter struct {
 	fileName string
 }
 
+// WriteFile writes contents to a file
 func (c fileWriter) WriteFile(content []byte) error {
 	dir := filepath.Dir(c.fileName)
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
@@ -25,6 +29,7 @@ func (c fileWriter) WriteFile(content []byte) error {
 	return os.WriteFile(c.fileName, content, 0644) // #nosec
 }
 
+// NewFileWriter returns a new FileWriter
 func NewFileWriter(fileName string) FileWriter {
 	return fileWriter{
 		fileName: fileName,

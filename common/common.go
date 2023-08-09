@@ -11,26 +11,23 @@ import (
 )
 
 const (
-	OldAppTemplateFilePath = "./template/app-old.yaml" // Path to the old app template yaml file
-	NewAppTemplateFilePath = "./template/app-new.yaml" // Path to the new app template yaml file
-	AppNamespace           = "app"                     // Namespace is the default namespace of the app
-	LOCALHOST              = "127.0.0.1"               // Localhost IP address
-)
-
-const (
-	ROOT = "root"
-	TMP  = "."
+	// LOCALHOST IP address
+	LOCALHOST = "127.0.0.1"
 )
 
 var (
+	// StdOut is a standard output
 	StdOut = os.Stdout
+	// StdErr is a standard error
 	StdErr = os.Stderr
 )
 
+// DefaultKubeConfigDir returns the default kubeconfig directory
 func DefaultKubeConfigDir() string {
 	return filepath.Join(GetHomeDir(), ".kube")
 }
 
+// GetHomeDir returns the home directory
 func GetHomeDir() string {
 	home, err := homedir.Dir()
 	if err != nil {
@@ -39,6 +36,7 @@ func GetHomeDir() string {
 	return home
 }
 
+// GetWorkDir returns the working directorys
 func GetWorkDir() string {
 	pwd, err := os.Getwd()
 	if err != nil {

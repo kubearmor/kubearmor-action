@@ -13,6 +13,7 @@ var rootCmd = &cobra.Command{
 	Example: "visual system -f [json file name] --app [app name] -o [png file name]\nvisual network --old [old json file name] --new [new json file name] -app [app name] -o [png file name]",
 }
 
+// Execute executes the root command.
 func Execute() {
 	rootCmd.Execute() // #nosec
 }
