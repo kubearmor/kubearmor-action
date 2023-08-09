@@ -54,6 +54,7 @@ This action will be used to visualize the system-level behaviors and the network
     namespace: 'sock-shop' # This is set for namespace of the application.(This must be set.)
     app-name: 'orders' # If set to non-empty, will show network connections of the pod containing the specified name. If not set or set none will show network connections of all pods.
 ```
+
 ### Complete Example
 ```yaml
 name: test
@@ -80,9 +81,11 @@ jobs:
         env:
           GOPATH: ${{ runner.workspace }}
           GO111MODULE: "on"
+
       # Checkout to your repo
       - name: Checkout
         uses: actions/checkout@v3
+
       # Install k3s cluster(You can setup a k8s cluster here)
       - name: Setup k3s cluster
         run: |
@@ -113,22 +116,26 @@ jobs:
             sleep 1
           done
           kubectl get pods -A
-      # Install kubearmor components(This will install kubearmor-client and Discovery-Engine)
+
+      # Install kubearmor components(This will install KubeArmor components into the configured k8s cluster)
       - name: Install kubearmor components
         uses: kubearmor/kubearmor-action/actions/install-kubearmor@main
-      # Show pods info
       - name: Get pod
         run: kubectl get po -A
+
       # Deploy the new app(You can deploy your application here)
       - name: Deploy the new app
         run: kubectl apply -f ./test/testdata/sock-shop.yaml
+
       # Check all pods are ready, if not, get reason
       - name: Check all pods are ready, if not, get reason
         uses: kubearmor/kubearmor-action/actions/check-pods-ready@main
+
       # Runs Integration/Tests/Load Generation(You can add a step here)
       # Generate load on the new app
       - name: Generate load on the new app
         run: docker run --net=host weaveworksdemos/load-test -h localhost:30001 -r 100 -c 2
+
       # Save the new app summary report and Choose to Generate visualisation results or not
       - name: Save the new app summary report and Generate visualisation results
         uses: kubearmor/kubearmor-action@main
@@ -139,17 +146,20 @@ jobs:
           app-name: 'front-end'
           file: 'summary-test.json'
           visualise: 'true' # default value is true, if set false, will not generate visualisation results but only save the new app summary report
+
       # Get the visualisation results
       - uses: actions/download-artifact@v2
         with:
           name: ${{ steps.visualisation.outputs.visualisation-results-artifact }}
           path: images
+
       # Store the visualisation results
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./images
           keep_files: true
+
       # Comment the visualisation results on the PR
       - name: Comment on PR
         run: |
@@ -157,10 +167,8 @@ jobs:
           gh pr comment  ${{ github.event.number }} -b"![network_graph](https://raw.githubusercontent.com/${{ github.repository }}/gh-pages/${{ steps.visualisation.outputs.network-visualisation-image }})"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # Delete the new app
-      - name: Delete the new app
-        run: kubectl delete -f ./test/testdata/sock-shop.yaml
 ```
+
 ## Architecture Overview
 ```Shell
 .
