@@ -1,0 +1,56 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Authors of KubeArmor
+
+name: 'kubearmor-action'
+description: 'kubearmor-action'
+inputs:
+  old-summary-path:  # old summary report path
+    description: 'Old summary report path'
+    required: flase
+    default: ''
+  namespace: # namespace of the app
+    description: 'Namespace of the app'
+    required: true
+  app-name:  # app name to filter, if not set, will show all apps
+    description: 'App name to filter, if not set, will show all apps'
+    required: flase
+    default: ''
+  file:  # the summary report file name
+    description: 'The summary report file name'
+    required: false
+    default: 'summary.json'
+  visualise: # whether to generate visualisation report
+    description: 'Whether to generate visualisation report'
+    required: false
+    default: 'true'
+outputs:
+  visualisation-results-artifact:
+    description: The name of the artifact containing the visualisation report
+    value: ${{ steps.visualisation-report.outputs.visualisation-results-artifact }}
+  sys-visualisation-image:
+    description: The name of the actual file in the artifact, which contains the system visualisation report
+    value: ${{ steps.visualisation-report.outputs.sys-visualisation-image }}
+  network-visualisation-image:
+    description: The name of the actual file in the artifact, which contains the network visualisation report
+    value: ${{ steps.visualisation-report.outputs.network-visualisation-image }}
+    
+runs:
+  using: composite
+  steps:
+      # Save the new app summary report
+      - name: Save the new app summary report
+        uses: kubearmor/kubearmor-action/actions/save-summary-report@main
+        id: save-summary-report
+        with:
+          namespace: ${{ inputs.namespace }}
+          file: ${{ inputs.file }}
+      # Generate visualisation report
+      - name: Kubearmor-action visualisation
+        if: ${{ inputs.visualise == 'true' }} # only run this step if visualise is true
+        id: visualisation-report
+        uses: kubearmor/kubearmor-action/actions/visual-report@main
+        with:
+          old-summary-path: ${{ inputs.old-summary-path }}
+          new-summary-path: '${{ github.workspace }}/${{ steps.save-summary-report.outputs.summary-report-file }}'
+          namespace: ${{ inputs.namespace }}
+          app-name: ${{ inputs.app-name }}
