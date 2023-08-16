@@ -70,6 +70,7 @@ jobs:
       # Generate load on the new app
       - name: Generate load on the new app
         run: docker run --net=host weaveworksdemos/load-test -h localhost:30001 -r 100 -c 2
+        
       # Save the new app summary report and Choose to Generate visualisation results or not
       - name: Save the new app summary report and Choose to Generate visualisation results
         uses: kubearmor/kubearmor-action@main
@@ -77,7 +78,6 @@ jobs:
         with:
           old-summary-path: 'https://raw.githubusercontent.com/kubearmor/kubearmor-action/main/test/testdata/old-summary-data.json'
           namespace: 'sock-shop'
-          app-name: 'front-end'
           file: 'summary-test.json'
           visualise: 'true'
       # Get the visualisation results
