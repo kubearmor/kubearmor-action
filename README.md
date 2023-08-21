@@ -14,7 +14,9 @@ This action will be used to save the new app summary report and choose to genera
     namespace: 'sock-shop'
     app-name: 'front-end'
     file: 'summary-test.json'
-    visualise: 'true' # default value is true, if set false, will not generate visualisation results but only save the new app summary report
+    install-kubearmor: 'true' # default value is false, if set true, will install karmor-cli and discovery-engine
+    save-summary-report: 'true' # default value is false, if set true, will save summary report  
+    visualise: 'true' # default value is false, if set true, will generate visualisation results
 ```
 ### Other Tool Actions
 #### Action: install-kubearmor
@@ -115,7 +117,9 @@ jobs:
           kubectl get pods -A
       # Install kubearmor components(This will install kubearmor-client and Discovery-Engine)
       - name: Install kubearmor components
-        uses: kubearmor/kubearmor-action/actions/install-kubearmor@main
+        uses: kubearmor/kubearmor-action/@main
+        with:
+          install-kubearmor: 'true'
       # Show pods info
       - name: Get pod
         run: kubectl get po -A
@@ -128,24 +132,41 @@ jobs:
       # Runs Integration/Tests/Load Generation(You can add a step here)
       # Generate load on the new app
       - name: Generate load on the new app
-        run: docker run --net=host weaveworksdemos/load-test -h localhost:30001 -r 100 -c 2
-      # Save the new app summary report and Choose to Generate visualisation results or not
+        run: |
+          sleep 60
+          docker run --net=host weaveworksdemos/load-test -h localhost:30001 -r 100 -c 2
+      # Save the new app summary report and Generate visualisation results
       - name: Save the new app summary report and Generate visualisation results
         uses: kubearmor/kubearmor-action@main
         id: visualisation
         with:
-          old-summary-path: 'https://raw.githubusercontent.com/kubearmor/kubearmor-action/main/test/testdata/old-summary-data.json'
+          old-summary-path: 'https://raw.githubusercontent.com/kubearmor/kubearmor-action/gh-pages/latest-summary-test.json'
           namespace: 'sock-shop'
-          app-name: 'front-end'
-          file: 'summary-test.json'
-          visualise: 'true' # default value is true, if set false, will not generate visualisation results but only save the new app summary report
+          file: 'latest-summary-test.json'
+          save-summary-report: 'true'
+          visualise: 'true'
+      # Get the latest summary report file
+      - name: Get the latest summary report file
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ steps.visualisation.outputs.summary-report-artifact }}
+          path: summary_reports
       # Get the visualisation results
-      - uses: actions/download-artifact@v2
+      - name: Get the visualisation results 
+        uses: actions/download-artifact@v2
         with:
           name: ${{ steps.visualisation.outputs.visualisation-results-artifact }}
           path: images
+      # Store the latest summary report file
+      - name: Store the latest summary report file
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./summary_reports
+          keep_files: true
       # Store the visualisation results
-      - uses: peaceiris/actions-gh-pages@v3
+      - name: Store the visualisation results
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./images
@@ -167,6 +188,7 @@ jobs:
 ├── LICENSE
 ├── Makefile
 ├── README.md
+├── action.yml
 ├── actions
 │   ├── check-pods-ready
 │   │   ├── action.yml
@@ -207,7 +229,6 @@ jobs:
 │   └── self-managed-k8s
 │       └── crio
 │           └── install_crio.sh
-├── karmor
 ├── pkg
 │   ├── controller
 │   │   └── client
