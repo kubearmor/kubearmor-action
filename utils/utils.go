@@ -14,6 +14,7 @@ import (
 	"github.com/kubearmor/kubearmor-action/utils/urlfile"
 )
 
+// Retry retries the given action for the given number of times
 func Retry(tryTimes int, trySleepTime time.Duration, action func() error) error {
 	var err error
 	for i := 0; i < tryTimes; i++ {
@@ -27,6 +28,7 @@ func Retry(tryTimes int, trySleepTime time.Duration, action func() error) error 
 	return fmt.Errorf("retry action timeout: %v", err)
 }
 
+// GetUUID returns a UUID string
 func GetUUID() string {
 	// generate a new UUID
 	id := uuid.New()
@@ -72,24 +74,22 @@ func ReadFile(address string) ([]byte, error) {
 	// Check if the address is a url
 	if CheckIsURL(address) {
 		// If the scheme is http or https, use http.Get to read the file
-		data, err := urlfile.ReadJsonFromURL(address)
+		data, err := urlfile.ReadJSONFromURL(address)
 		if err != nil {
 			return nil, err
-		} else {
-			return data, nil
 		}
-	} else {
-		// If the scheme is not http or https, assume it is a local path and use os.Open to read the file
-		// os.ReadFile is a function that takes a file name and returns its content as a byte array and an error value
-		data, err := os.ReadFile(address) // #nosec
-		if err != nil {
-			return nil, err
-		} else {
-			return data, nil
-		}
+		return data, nil
 	}
+	// If the scheme is not http or https, assume it is a local path and use os.Open to read the file
+	// os.ReadFile is a function that takes a file name and returns its content as a byte array and an error value
+	data, err := os.ReadFile(address) // #nosec
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
+// CheckIsURL checks if the given address is a url
 func CheckIsURL(address string) bool {
 	// Parse the address as a url
 	u, err := url.Parse(address)
@@ -99,7 +99,6 @@ func CheckIsURL(address string) bool {
 	// Check the scheme of the url
 	if u.Scheme == "http" || u.Scheme == "https" {
 		return true
-	} else {
-		return false
 	}
+	return false
 }

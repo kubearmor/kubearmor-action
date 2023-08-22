@@ -27,7 +27,7 @@ This action will be used to install kubearmor-client and Discovery-Engine.
   uses: kubearmor/kubearmor-action/actions/install-kubearmor@main
 ```
 #### Action: check-pods-ready
-This action will be used to check whether all pods are ready, if not, will show logs and events for troubleshooting.(This will need setup GO env first.)
+This action will be used to check whether all pods are ready, if not, will show logs and events for troubleshooting.(This will need to setup Go env first.)
 ```yaml
 # Check all pods are ready, if not, get reason
 - name: Check all pods are ready, if not, get reason
