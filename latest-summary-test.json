@@ -1,0 +1,1445 @@
+[
+    {
+        "PodName": "shipping-78db6c6958-v5z2b",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "ContainerName": "35281720df6987350667feb559a56317a86b135d828675a199a2f454d2d4b560",
+        "FileData": [
+            {
+                "Source": "/usr/local/bin/java.sh",
+                "Destination": "/dev/",
+                "Count": "7",
+                "UpdatedTime": "Tue Aug 22 12:52:06 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/local/bin/java.sh",
+                "Destination": "/etc/passwd",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:52:03 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/usr/src/app/app.jar",
+                "Count": "600",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/local/bin/java.sh",
+                "Destination": "/",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:52:03 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/local/bin/java.sh",
+                "Destination": "/run/k3s/containerd/io.containerd.runtime.v2.task/k8s.io/35281720df6987350667feb559a56317a86b135d828675a199a2f454d2d4b560/rootfs/",
+                "Count": "27",
+                "UpdatedTime": "Tue Aug 22 12:52:06 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/local/bin/java.sh",
+                "Destination": "/etc/group",
+                "Count": "2",
+                "UpdatedTime": "Tue Aug 22 12:52:03 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/local/bin/java.sh",
+                "Destination": "/proc/7789/mountinfo",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:52:06 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/local/bin/java.sh",
+                "Destination": "/etc/resolv.conf",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:52:06 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/usr/lib/jvm/java-1.8-openjdk/jre/lib/amd64/libnet.so",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            }
+        ],
+        "BindConnection": [
+            {
+                "Protocol": "AF_INET6",
+                "Command": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "BindPort": "80",
+                "BindAddress": "::"
+            }
+        ]
+    },
+    {
+        "PodName": "orders-d5f745cc6-fggrv",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "ContainerName": "7964eefcb1cc1d1fffb94dd9213652deb7f18a6f654206fd85c850ac891c13c6",
+        "FileData": [
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/etc/passwd",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:52:03 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/local/bin/java.sh",
+                "Destination": "/run/k3s/containerd/io.containerd.runtime.v2.task/k8s.io/7964eefcb1cc1d1fffb94dd9213652deb7f18a6f654206fd85c850ac891c13c6/rootfs/etc/resolv.conf",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:52:12 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/usr/src/app/app.jar",
+                "Count": "385",
+                "UpdatedTime": "Tue Aug 22 12:52:26 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/usr/src/app",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:52:03 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/local/bin/java.sh",
+                "Destination": "/proc/7708/mountinfo",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:52:12 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/local/bin/java.sh",
+                "Destination": "/etc/resolv.conf",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:52:12 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/usr/lib/jvm/java-1.8-openjdk/jre/lib/meta-index",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:52:03 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/usr/lib/jvm/java-1.8-openjdk/jre/lib/amd64/",
+                "Count": "9",
+                "UpdatedTime": "Tue Aug 22 12:52:03 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/local/bin/java.sh",
+                "Destination": "/dev/tty",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:52:12 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/tmp/",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:52:03 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/etc/hosts",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:56 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/etc/resolv.conf",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:56 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/usr/src/app/app.jar",
+                "Count": "198",
+                "UpdatedTime": "Tue Aug 22 12:54:57 UTC 2023",
+                "Status": "Allow"
+            }
+        ],
+        "EgressConnection": [
+            {
+                "Protocol": "TCPv6",
+                "Command": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "IP": "svc/orders-db",
+                "Port": "27017",
+                "Labels": "name=orders-db",
+                "Namespace": "sock-shop",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:56 UTC 2023"
+            }
+        ],
+        "BindConnection": [
+            {
+                "Protocol": "AF_INET",
+                "Command": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:56 UTC 2023",
+                "BindPort": "0",
+                "BindAddress": "0.0.0.0"
+            }
+        ]
+    },
+    {
+        "DeploymentName": "user",
+        "PodName": "user-5c8d59bcd4-lxtxz",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "Label": "name=user",
+        "ContainerName": "user",
+        "IngressConnection": [
+            {
+                "Protocol": "TCPv6",
+                "Command": "/user",
+                "IP": "10.42.0.1",
+                "Port": "80",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023"
+            }
+        ],
+        "EgressConnection": [
+            {
+                "Protocol": "TCP",
+                "Command": "/user",
+                "IP": "svc/user-db",
+                "Port": "27017",
+                "Labels": "name=user-db",
+                "Namespace": "sock-shop",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:52:26 UTC 2023"
+            }
+        ]
+    },
+    {
+        "DeploymentName": "queue-master",
+        "PodName": "queue-master-78b6f85bb7-9p27j",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "Label": "name=queue-master",
+        "ContainerName": "queue-master",
+        "FileData": [
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/usr/src/app/app.jar",
+                "Count": "928",
+                "UpdatedTime": "Tue Aug 22 12:55:02 UTC 2023",
+                "Status": "Allow"
+            }
+        ],
+        "EgressConnection": [
+            {
+                "Protocol": "TCPv6",
+                "Command": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "IP": "svc/rabbitmq",
+                "Port": "5672",
+                "Labels": "name=rabbitmq",
+                "Namespace": "sock-shop",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:55:01 UTC 2023"
+            }
+        ]
+    },
+    {
+        "DeploymentName": "carts",
+        "PodName": "carts-5bb979cb6d-qt4bk",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "Label": "name=carts",
+        "ContainerName": "carts",
+        "FileData": [
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/usr/src/app/app.jar",
+                "Count": "556",
+                "UpdatedTime": "Tue Aug 22 12:54:56 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "Destination": "/usr/src/app/app.jar",
+                "Count": "96",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            }
+        ],
+        "EgressConnection": [
+            {
+                "Protocol": "TCPv6",
+                "Command": "/usr/lib/jvm/java-1.8-openjdk/jre/bin/java",
+                "IP": "svc/carts-db",
+                "Port": "27017",
+                "Labels": "name=carts-db",
+                "Namespace": "sock-shop",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:56 UTC 2023"
+            }
+        ]
+    },
+    {
+        "PodName": "catalogue-db-6d76c95d76-vs2t2",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "ContainerName": "7800b6d6d82243d60e3e28b5da6857938d85a26e52f16118258df1853ba9cccb",
+        "ProcessData": [
+            {
+                "Source": "/bin/bash",
+                "Destination": "/usr/bin/mysql_tzinfo_to_sql",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/var/lib/rancher/k3s/data/dc43f496a0a9ac19d3b2444d390db38e0cfb38e672721f838b075422b8734994/bin/containerd-shim-runc-v2",
+                "Destination": "/usr/sbin/mysqld",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/bash",
+                "Destination": "/bin/sleep",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/bash",
+                "Destination": "/usr/bin/mysql",
+                "Count": "5",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/bash",
+                "Destination": "/usr/sbin/mysqld",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/bash",
+                "Destination": "/bin/sed",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            }
+        ],
+        "FileData": [
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/tmp/",
+                "Count": "12",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql",
+                "Destination": "/usr/share/mysql/charsets/Index.xml",
+                "Count": "6",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql_tzinfo_to_sql",
+                "Destination": "/etc/localtime",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql",
+                "Destination": "/docker-entrypoint-initdb.d/dump.sql",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/sed",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/usr/share/mysql/english/errmsg.sys",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/dev/null",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/run/mysqld/mysqld.sock.lock",
+                "Count": "2",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/lib/x86_64-linux-gnu/",
+                "Count": "8",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/var/lib/mysql",
+                "Count": "2",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/lib/x86_64-linux-gnu/",
+                "Count": "9",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql_tzinfo_to_sql",
+                "Destination": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.20",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/usr/share/mysql/charsets/Index.xml",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/run/mysqld/mysqld.pid",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/var/lib/mysql/",
+                "Count": "472",
+                "UpdatedTime": "Tue Aug 22 12:54:57 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/tmp",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql_tzinfo_to_sql",
+                "Destination": "/usr/share/zoneinfo",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/run/mysqld/mysqld.sock.lock",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql",
+                "Destination": "/dev/null",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql_tzinfo_to_sql",
+                "Destination": "/lib/x86_64-linux-gnu/",
+                "Count": "5",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/run/mysqld/mysqld.sock",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/usr/share/mysql/english/errmsg.sys",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/var/lib/mysql",
+                "Count": "2",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/usr/share/mysql/charsets/Index.xml",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/dev/urandom",
+                "Count": "5",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/sed",
+                "Destination": "/lib/x86_64-linux-gnu/",
+                "Count": "5",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.20",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/run/mysqld/mysqld.pid",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.20",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql",
+                "Destination": "/etc/",
+                "Count": "66",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/bash",
+                "Destination": "/docker-entrypoint-initdb.d",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql",
+                "Destination": "/tmp/",
+                "Count": "2",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql_tzinfo_to_sql",
+                "Destination": "/usr/share/zoneinfo/",
+                "Count": "1887",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql_tzinfo_to_sql",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/tmp",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql",
+                "Destination": "/lib/x86_64-linux-gnu/",
+                "Count": "54",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/etc/",
+                "Count": "8",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/dev/urandom",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:02 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/tmp/",
+                "Count": "12",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mysql",
+                "Destination": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.20",
+                "Count": "6",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/sleep",
+                "Destination": "/lib/x86_64-linux-gnu/libc-2.19.so",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/etc/",
+                "Count": "12",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/bash",
+                "Destination": "/tmp/",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/sleep",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/sbin/mysqld",
+                "Destination": "/var/lib/mysql/",
+                "Count": "417",
+                "UpdatedTime": "Tue Aug 22 12:55:02 UTC 2023",
+                "Status": "Allow"
+            }
+        ],
+        "EgressConnection": [
+            {
+                "Protocol": "AF_UNIX",
+                "Command": "/usr/bin/mysql",
+                "IP": "/var/run/mysqld/mysqld.sock",
+                "Port": "0",
+                "Count": "5",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023"
+            }
+        ],
+        "BindConnection": [
+            {
+                "Protocol": "AF_UNIX",
+                "Command": "/usr/sbin/mysqld",
+                "IP": "/var/run/mysqld/mysqld.sock",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "BindAddress": "/var/run/mysqld/mysqld.sock"
+            },
+            {
+                "Protocol": "AF_UNIX",
+                "Command": "/usr/sbin/mysqld",
+                "IP": "/var/run/mysqld/mysqld.sock",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "BindAddress": "/var/run/mysqld/mysqld.sock"
+            },
+            {
+                "Protocol": "AF_INET6",
+                "Command": "/usr/sbin/mysqld",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "BindPort": "3306",
+                "BindAddress": "::"
+            }
+        ]
+    },
+    {
+        "PodName": "rabbitmq-55c946cb56-7hwb8",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "ContainerName": "0633137ce95f2ebf3b4b0f0a46b60024b39680f2cd81e795b6fb848fc441ce04",
+        "ProcessData": [
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/erl_child_setup",
+                "Destination": "/usr/lib/erlang/erts-8.3/bin/inet_gethost",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/erlang/erts-8.3/bin/erl_child_setup",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/dash",
+                "Destination": "/usr/bin/erl",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/dash",
+                "Destination": "/usr/lib/erlang/erts-8.3/bin/erlexec",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/erl_child_setup",
+                "Destination": "/bin/sh",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/erl_child_setup",
+                "Destination": "/bin/sh",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/erl_child_setup",
+                "Destination": "/usr/lib/erlang/erts-8.3/bin/inet_gethost",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/dash",
+                "Destination": "/bin/df",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            }
+        ],
+        "FileData": [
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/erlang/releases/RELEASES",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/var/lib/rabbitmq/mnesia/rabbit@rabbitmq-55c946cb56-7hwb8-plugins-expand",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/sed",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/erlexec",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/erlexec",
+                "Destination": "/lib/x86_64-linux-gnu/libm-2.19.so",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/erlexec",
+                "Destination": "/lib/x86_64-linux-gnu/libc-2.19.so",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.8/ebin/",
+                "Count": "106",
+                "UpdatedTime": "Tue Aug 22 12:54:58 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/inet_gethost",
+                "Destination": "/lib/x86_64-linux-gnu/",
+                "Count": "5",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/sh",
+                "Destination": "/lib/x86_64-linux-gnu/libc-2.19.so",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.8/ebin",
+                "Count": "21",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/erlang/lib/",
+                "Count": "604",
+                "UpdatedTime": "Tue Aug 22 12:54:57 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/var/lib/rabbitmq/mnesia/rabbit@rabbitmq-55c946cb56-7hwb8-plugins-expand/",
+                "Count": "389",
+                "UpdatedTime": "Tue Aug 22 12:54:56 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:54:56 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/sh",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/sed",
+                "Destination": "/lib/x86_64-linux-gnu/",
+                "Count": "5",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/etc/rabbitmq/rabbitmq.config",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/var/lib/rabbitmq/mnesia/rabbit@rabbitmq-55c946cb56-7hwb8/",
+                "Count": "54",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/df",
+                "Destination": "/var/lib/rabbitmq/mnesia/rabbit@rabbitmq-55c946cb56-7hwb8",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/erl",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/erl_child_setup",
+                "Destination": "/lib/x86_64-linux-gnu/libc-2.19.so",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/sh",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/epmd",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.8/ebin/",
+                "Count": "15",
+                "UpdatedTime": "Tue Aug 22 12:54:55 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/erlang/releases/19/OTP_VERSION",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:54 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/sh",
+                "Destination": "/lib/x86_64-linux-gnu/libc-2.19.so",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/df",
+                "Destination": "/dev/null",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/lib/x86_64-linux-gnu/",
+                "Count": "8",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/var/lib/rabbitmq/mnesia/rabbit@rabbitmq-55c946cb56-7hwb8-plugins-expand/",
+                "Count": "97",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/erl_child_setup",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.8/plugins/",
+                "Count": "131",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/erl",
+                "Destination": "/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.8/ebin",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/inet_gethost",
+                "Destination": "/etc/",
+                "Count": "12",
+                "UpdatedTime": "Tue Aug 22 12:55:01 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/df",
+                "Destination": "/etc/ld.so.cache",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/inet_gethost",
+                "Destination": "/lib/x86_64-linux-gnu/",
+                "Count": "8",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/var/lib/rabbitmq/.erlang.cookie",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/inet_gethost",
+                "Destination": "/etc/",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.0",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:56 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/erlang/lib",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/erl",
+                "Destination": "/etc/localtime",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/erl",
+                "Destination": "/lib/x86_64-linux-gnu/libc-2.19.so",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/epmd",
+                "Destination": "/lib/x86_64-linux-gnu/",
+                "Count": "4",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/erlang/bin/start_sasl.boot",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/erl",
+                "Destination": "/usr/lib/erlang/bin/erl",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/bin/df",
+                "Destination": "/lib/x86_64-linux-gnu/libc-2.19.so",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/var/lib/rabbitmq/mnesia/rabbit@rabbitmq-55c946cb56-7hwb8",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/erl",
+                "Destination": "/dev/null",
+                "Count": "2",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/erl",
+                "Destination": "/usr/lib/erlang/lib/sasl-3.0.3/ebin",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/erlang/lib/",
+                "Count": "197",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.8/plugins",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/etc/rabbitmq/enabled_plugins",
+                "Count": "15",
+                "UpdatedTime": "Tue Aug 22 12:56:10 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/var/lib/rabbitmq/mnesia/rabbit@rabbitmq-55c946cb56-7hwb8-plugins-expand",
+                "Count": "2",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/var/lib/rabbitmq/mnesia/rabbit@rabbitmq-55c946cb56-7hwb8/",
+                "Count": "6",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Destination": "/etc/rabbitmq/enabled_plugins",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/lib/erlang/erts-8.3/bin/inet_gethost",
+                "Destination": "/etc/hosts",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:56:00 UTC 2023",
+                "Status": "Allow"
+            }
+        ],
+        "EgressConnection": [
+            {
+                "Protocol": "TCP",
+                "Command": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "IP": "pod/rabbitmq-55c946cb56-7hwb8",
+                "Port": "4369",
+                "Labels": "name=rabbitmq",
+                "Namespace": "sock-shop",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:56:00 UTC 2023"
+            },
+            {
+                "Protocol": "TCP",
+                "Command": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "IP": "127.0.0.1",
+                "Port": "4369",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023"
+            }
+        ],
+        "BindConnection": [
+            {
+                "Protocol": "AF_INET",
+                "Command": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "BindPort": "15672",
+                "BindAddress": "0.0.0.0"
+            },
+            {
+                "Protocol": "AF_INET",
+                "Command": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Count": "4",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "BindPort": "49152",
+                "BindAddress": "0.0.0.0"
+            },
+            {
+                "Protocol": "AF_INET",
+                "Command": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Count": "3",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "BindPort": "0",
+                "BindAddress": "0.0.0.0"
+            },
+            {
+                "Protocol": "AF_INET",
+                "Command": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "BindPort": "25672",
+                "BindAddress": "0.0.0.0"
+            },
+            {
+                "Protocol": "AF_INET6",
+                "Command": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "BindPort": "5672",
+                "BindAddress": "::"
+            },
+            {
+                "Protocol": "AF_INET6",
+                "Command": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Count": "2",
+                "UpdatedTime": "Tue Aug 22 12:55:00 UTC 2023",
+                "BindPort": "49152",
+                "BindAddress": "::"
+            },
+            {
+                "Protocol": "AF_INET",
+                "Command": "/usr/lib/erlang/erts-8.3/bin/beam.smp",
+                "Count": "7",
+                "UpdatedTime": "Tue Aug 22 12:56:00 UTC 2023",
+                "BindPort": "0",
+                "BindAddress": "0.0.0.0"
+            }
+        ]
+    },
+    {
+        "PodName": "user-db-758477f574-gwxzt",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "ContainerName": "71bfba0018131c07e6a31ed0daa3f4f1a0fd4b8437d92c9bd74d7bf6ef25a8e2",
+        "FileData": [
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db-users/journal",
+                "Count": "22",
+                "UpdatedTime": "Tue Aug 22 12:54:58 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db-users/diagnostic.data/metrics.interim.temp",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:09 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db-users/journal",
+                "Count": "26",
+                "UpdatedTime": "Tue Aug 22 12:55:11 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db-users/diagnostic.data/metrics.interim.temp",
+                "Count": "2",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db-users",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:37 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/etc/hosts",
+                "Count": "4",
+                "UpdatedTime": "Tue Aug 22 12:55:37 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db-users/",
+                "Count": "121",
+                "UpdatedTime": "Tue Aug 22 12:56:11 UTC 2023",
+                "Status": "Allow"
+            }
+        ]
+    },
+    {
+        "DeploymentName": "front-end",
+        "PodName": "front-end-5d7b595bcd-244lf",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "Label": "name=front-end",
+        "ContainerName": "front-end",
+        "FileData": [
+            {
+                "Source": "/usr/local/bin/node",
+                "Destination": "/usr/src/app/public/index.html",
+                "Count": "25",
+                "UpdatedTime": "Tue Aug 22 12:56:11 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/local/bin/node",
+                "Destination": "/usr/src/app/public/index.html",
+                "Count": "4",
+                "UpdatedTime": "Tue Aug 22 12:54:56 UTC 2023",
+                "Status": "Allow"
+            }
+        ],
+        "IngressConnection": [
+            {
+                "Protocol": "TCPv6",
+                "Command": "/usr/local/bin/node",
+                "IP": "10.42.0.1",
+                "Port": "8079",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023"
+            }
+        ]
+    },
+    {
+        "PodName": "orders-db-688cc755dd-2kgvf",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "ContainerName": "20a7c3ed5ee1abc519f96feb642f3512ff883d7b841af837fff3309e75832761",
+        "FileData": [
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db",
+                "Count": "13",
+                "UpdatedTime": "Tue Aug 22 12:54:52 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db/",
+                "Count": "149",
+                "UpdatedTime": "Tue Aug 22 12:56:11 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db/",
+                "Count": "64",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:48 UTC 2023",
+                "Status": "Allow"
+            }
+        ]
+    },
+    {
+        "PodName": "catalogue-7c89c4b8b7-5982f",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "ContainerName": "36f0ffeb35f76a7232c62238599136b74740198cc2c8840902437eea75275f51",
+        "EgressConnection": [
+            {
+                "Protocol": "TCP",
+                "Command": "/app",
+                "IP": "svc/catalogue-db",
+                "Port": "3306",
+                "Labels": "name=catalogue-db",
+                "Namespace": "sock-shop",
+                "Count": "4",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023"
+            },
+            {
+                "Protocol": "TCP",
+                "Command": "/app",
+                "IP": "svc/catalogue-db",
+                "Port": "3306",
+                "Labels": "name=catalogue-db",
+                "Namespace": "sock-shop",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:02 UTC 2023"
+            }
+        ]
+    },
+    {
+        "PodName": "payment-66d9c6c5c8-7dg69",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "ContainerName": "825386d6f444c5f7713ab58257e77f312a5e898e91193193f7dbd75e3b512598",
+        "IngressConnection": [
+            {
+                "Protocol": "TCPv6",
+                "Command": "/app",
+                "IP": "10.42.0.1",
+                "Port": "80",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023"
+            }
+        ]
+    },
+    {
+        "PodName": "carts-db-6d88679f9d-hrc2d",
+        "ClusterName": "default",
+        "Namespace": "sock-shop",
+        "ContainerName": "2701b39b3316cee74249604291655d1d4f2360d0b976ab80438a0336e43e5d7c",
+        "FileData": [
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db/",
+                "Count": "66",
+                "UpdatedTime": "Tue Aug 22 12:54:59 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db/",
+                "Count": "149",
+                "UpdatedTime": "Tue Aug 22 12:56:11 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db",
+                "Count": "14",
+                "UpdatedTime": "Tue Aug 22 12:54:53 UTC 2023",
+                "Status": "Allow"
+            },
+            {
+                "Source": "/usr/bin/mongod",
+                "Destination": "/data/db",
+                "Count": "1",
+                "UpdatedTime": "Tue Aug 22 12:55:48 UTC 2023",
+                "Status": "Allow"
+            }
+        ]
+    }
+]
