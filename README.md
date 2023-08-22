@@ -61,8 +61,6 @@ This action will be used to visualize the system-level behaviors and the network
 name: test
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 permissions:
