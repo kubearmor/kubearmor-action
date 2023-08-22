@@ -78,7 +78,7 @@ jobs:
         uses: kubearmor/kubearmor-action@main
         id: visualisation
         with:
-          old-summary-path: 'https://raw.githubusercontent.com/kubearmor/kubearmor-action/gh-pages/latest-summary-test.json'
+          old-summary-path: 'https://raw.githubusercontent.com/zhy76/kubearmor-action/gh-pages/latest-summary-test.json'
           namespace: 'sock-shop'
           file: 'latest-summary-test.json'
           save-summary-report: 'true'
