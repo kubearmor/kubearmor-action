@@ -14,48 +14,11 @@ This action will be used to save the new app summary report and choose to genera
     namespace: 'sock-shop'
     app-name: 'front-end'
     file: 'summary-test.json'
-    install-kubearmor: 'true' # default value is false, if set true, will install karmor-cli and discovery-engine
-    save-summary-report: 'true' # default value is false, if set true, will save summary report  
+    install-kubearmor: 'true' # default value is false, if set true, will install kubearmor components
+    save-summary-report: 'true' # default value is false, if set true, will save summary report to artifacts
     visualise: 'true' # default value is false, if set true, will generate visualisation results
 ```
-### Other Tool Actions
-#### Action: install-kubearmor
-This action will be used to install kubearmor-client and Discovery-Engine.
-```yaml
-# Install kubearmor components
-- name: Install kubearmor components
-  uses: kubearmor/kubearmor-action/actions/install-kubearmor@main
-```
-#### Action: check-pods-ready
-This action will be used to check whether all pods are ready, if not, will show logs and events for troubleshooting.(This will need setup GO env first.)
-```yaml
-# Check all pods are ready, if not, get reason
-- name: Check all pods are ready, if not, get reason
-  uses: kubearmor/kubearmor-action/actions/check-pods-ready@main
-```
-#### Action: save-summary-report
-This action will be used to save the summary report to specified file.
-```yaml
-# Save the app summary report
-- name: Save the new app summary report
-  uses: kubearmor/kubearmor-action/actions/save-summary-report@main
-  id: save-summary-report
-  with:
-    namespace: 'sock-shop' # This is set for karmor summary -n $namespace command.(This must be set.)
-    file: 'summary-test.json' # This is set for the name of the summary report file.(If not set, the default value is summary.json.)
-```
-#### Action: visual-report
-This action will be used to visualize the system-level behaviors and the network connections changes.If the old-summary-path and new-summary-path are different, the network connection changes before and after are displayed. If they are the same, the network behavior of the specific application is displayed without changes.(This will setup JAVA env acquiescently.)
-```yaml
-- name: Kubearmor-action visualisation
-  id: visualisation-report
-  uses: kubearmor/kubearmor-action/actions/visual-report@main
-  with:
-    old-summary-path: 'https://raw.githubusercontent.com/kubearmor/kubearmor-action/main/test/testdata/old-summary-data.json' # This is set for old-summary-path, this can be set remote URL or local file path.(This must be set.)
-    new-summary-path: '${{ github.workspace }}/${{ steps.save-summary-report.outputs.summary-report-file }}' # This is set for new-summary-path, this can be set remote URL or local file path.(This must be set.)
-    namespace: 'sock-shop' # This is set for namespace of the application.(This must be set.)
-    app-name: 'orders' # If set to non-empty, will show network connections of the pod containing the specified name. If not set or set none will show network connections of all pods.
-```
+
 ### Complete Example
 ```yaml
 name: test
@@ -182,6 +145,23 @@ jobs:
       - name: Delete the new app
         run: kubectl delete -f ./test/testdata/sock-shop.yaml
 ```
+
+### Other Tool Actions
+#### Action: check-pods-ready
+This action will be used to check whether all pods are ready, if not, will show logs and events for troubleshooting.(This will need setup GO env first.)
+```yaml
+# Check all pods are ready, if not, get reason
+- name: Check all pods are ready, if not, get reason
+  uses: kubearmor/kubearmor-action/actions/check-pods-ready@main
+```
+
+## Application Behaviors Visualisation
+### System Behaviors
+![Alt text](docs/pics/sys-behaviors.png)
+### Network Connections
+![Alt text](docs/pics/network-connnections.png)
+
+
 ## Architecture Overview
 ```Shell
 .
@@ -254,9 +234,3 @@ jobs:
     │   └── urlfile.go
     └── utils.go
 ```
-
-## Application Behaviors Visualisation
-### System Behaviors
-![Alt text](docs/pics/sys-behaviors.png)
-### Network Connections
-![Alt text](docs/pics/network-connnections.png)
