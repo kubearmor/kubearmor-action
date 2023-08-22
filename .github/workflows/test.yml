@@ -55,9 +55,9 @@ jobs:
             sleep 1
           done
           kubectl get pods -A
-      # Install kubearmor components(This will install kubearmor-client and Discovery-Engine)
+      # Install KubeArmor components
       - name: Install kubearmor components
-        uses: kubearmor/kubearmor-action/@main
+        uses: kubearmor/kubearmor-action@main
         with:
           install-kubearmor: 'true'
       # Show pods info
