@@ -15,11 +15,11 @@ import (
 // an info object representing the downloaded object.
 type URLVisitor struct {
 	URL              *url.URL
-	HttpAttemptCount int
+	HTTPAttemptCount int
 }
 
-// readHttpWithRetries tries to http.Get the v.URL retries times before giving up.
-func readHttpWithRetries(get httpget, duration time.Duration, u string, attempts int) (io.ReadCloser, error) {
+// readHTTPWithRetries tries to http.Get the v.URL retries times before giving up.
+func readHTTPWithRetries(get httpget, duration time.Duration, u string, attempts int) (io.ReadCloser, error) {
 	var err error
 	if attempts <= 0 {
 		return nil, fmt.Errorf("http attempts must be greater than 0, was %d", attempts)
@@ -76,9 +76,9 @@ func httpgetImpl(url string) (int, string, io.ReadCloser, error) {
 	return resp.StatusCode, resp.Status, resp.Body, nil
 }
 
-// readJsonFromURL reads the json file from the given url and returns it as a []byte array.
-func ReadJsonFromURL(url string) ([]byte, error) {
-	body, err := readHttpWithRetries(httpgetImpl, time.Second*5, url, 3)
+// ReadJSONFromURL reads the json file from the given url and returns it as a []byte array.
+func ReadJSONFromURL(url string) ([]byte, error) {
+	body, err := readHTTPWithRetries(httpgetImpl, time.Second*5, url, 3)
 	if err != nil {
 		return nil, err
 	}

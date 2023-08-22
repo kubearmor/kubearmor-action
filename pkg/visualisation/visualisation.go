@@ -17,10 +17,11 @@ import (
 )
 
 var (
+	// PWD is the current working directory
 	PWD = common.GetWorkDir() + "/pkg/visualisation/"
 )
 
-// SummaryData is a struct that represents the karmor summary JSON data
+// ParseSummaryData parses the summary data and returns a slice of SummaryData objects
 func ParseSummaryData(path string) []*SummaryData {
 	// data is a byte array that will hold the content of the JSON file
 	var data []byte
@@ -79,11 +80,11 @@ func ParseSysData(summaryDatas []*SummaryData, appName string) *VisualSysData {
 		}
 		getLabel(sd, vs)
 		// Get Processes Produced
-		handle_psfile_set(sd, vs, "Process")
+		handlePsfileSet(sd, vs, "Process")
 		// Get Files Accessed
-		handle_psfile_set(sd, vs, "File")
+		handlePsfileSet(sd, vs, "File")
 		// Get Network Data
-		handle_network_set(sd, vs)
+		handleNetworkSet(sd, vs)
 	}
 	return vs
 }
@@ -93,8 +94,8 @@ func getLabel(summaryData *SummaryData, vs *VisualSysData) {
 	vs.Labels = append(vs.Labels, summaryData.Label)
 }
 
-// handle_psfile_set handles the process and file data and appends it to the VisualSysData object
-func handle_psfile_set(summaryData *SummaryData, vs *VisualSysData, kind string) {
+// handlePsfileSet handles the process and file data and appends it to the VisualSysData object
+func handlePsfileSet(summaryData *SummaryData, vs *VisualSysData, kind string) {
 	if kind == "Process" {
 		for _, ps := range summaryData.ProcessData {
 			if _, ok := vs.ProcessData[ps.Source]; !ok {
@@ -109,8 +110,8 @@ func handle_psfile_set(summaryData *SummaryData, vs *VisualSysData, kind string)
 	}
 }
 
-// handle_network_set handles the network data and appends it to the VisualSysData object
-func handle_network_set(summaryData *SummaryData, vs *VisualSysData) {
+// handleNetworkSet handles the network data and appends it to the VisualSysData object
+func handleNetworkSet(summaryData *SummaryData, vs *VisualSysData) {
 	for _, net := range summaryData.IngressConnection {
 		if _, ok := vs.NetworkData[net.Protocol]; !ok {
 			vs.NetworkData[net.Protocol] = make(map[string]string)
@@ -125,7 +126,7 @@ func handle_network_set(summaryData *SummaryData, vs *VisualSysData) {
 	}
 }
 
-// Convert a VisualNetworkData object to a PlantUML format and save it in net.puml
+// ConvertVndToPlantUML Convert a VisualNetworkData object to a PlantUML format and save it in net.puml
 func ConvertVndToPlantUML(vnd *VisualNetworkData, appName string) error {
 	// Create a file named net.puml
 	file, err := os.Create(PWD + "net.puml") // #nosec
@@ -192,60 +193,61 @@ type connectionValue struct {
 	kind int
 }
 
-func ParseNetworkData(sd_olds, sd_news []*SummaryData, appName string) *VisualNetworkData {
-	if len(sd_news) == 0 {
+// ParseNetworkData parses the summary data and returns a VisualNetworkData object
+func ParseNetworkData(sdOlds, sdNews []*SummaryData, appName string) *VisualNetworkData {
+	if len(sdNews) == 0 {
 		return nil
 	}
-	nsips_old := make(map[string][]string, 0)
-	nsips_new := make(map[string][]string, 0)
+	nsipsOld := make(map[string][]string, 0)
+	nsipsNew := make(map[string][]string, 0)
 	ips := make(map[string]bool, 0)
-	cds_old := make(map[connectionKey]connectionValue, 0)
-	cds_new := make(map[connectionKey]connectionValue, 0)
-	cds_merged := make(map[connectionKey]connectionValue, 0)
+	cdsOld := make(map[connectionKey]connectionValue, 0)
+	cdsNew := make(map[connectionKey]connectionValue, 0)
+	cdsMerged := make(map[connectionKey]connectionValue, 0)
 
 	vn := &VisualNetworkData{}
 	vn.NsIps = make(map[string][]string)
-	for _, sd_old := range sd_olds {
+	for _, sdOld := range sdOlds {
 		// Get Namespace Labels
-		getNsIps(sd_old, nsips_old)
+		getNsIps(sdOld, nsipsOld)
 		// Get Different Network Connections
-		getDiffConnectionData(sd_old, cds_old, appName)
+		getDiffConnectionData(sdOld, cdsOld, appName)
 	}
 
-	for _, sd_new := range sd_news {
+	for _, sdNew := range sdNews {
 		// Get Namespace Labels
-		getNsIps(sd_new, nsips_new)
+		getNsIps(sdNew, nsipsNew)
 		// Get Different Network Connections
-		getDiffConnectionData(sd_new, cds_new, appName)
+		getDiffConnectionData(sdNew, cdsNew, appName)
 	}
 
 	// merge the connections
-	for k, v := range cds_new {
+	for k, v := range cdsNew {
 		// fmt.Println(k, v)
-		if _, ok := cds_old[k]; ok {
+		if _, ok := cdsOld[k]; ok {
 			// if exists in both, means unchanged
-			cds_merged[k] = connectionValue{edgeColor: v.edgeColor, kind: 0}
+			cdsMerged[k] = connectionValue{edgeColor: v.edgeColor, kind: 0}
 		} else {
 			// if exists in new, means added
-			cds_merged[k] = connectionValue{edgeColor: "red", kind: 1}
+			cdsMerged[k] = connectionValue{edgeColor: "red", kind: 1}
 		}
 		// add ips to the ips map, to filter nsips
 		ips[k.src] = true
 		ips[k.dst] = true
 	}
 	// check for deleted connections
-	for k := range cds_old {
+	for k := range cdsOld {
 		// fmt.Println(k, v)
-		if _, ok := cds_new[k]; !ok {
+		if _, ok := cdsNew[k]; !ok {
 			// if exists in old, but not in new, means deleted
-			cds_merged[k] = connectionValue{edgeColor: "red", kind: -1}
+			cdsMerged[k] = connectionValue{edgeColor: "red", kind: -1}
 		}
 		// add ips to the ips map, to filter nsips
 		ips[k.src] = true
 		ips[k.dst] = true
 	}
 	// write the connections to the vn
-	for k, v := range cds_merged {
+	for k, v := range cdsMerged {
 		// unchanged
 		if v.kind == 0 {
 			edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : %s/%s\n", k.src, v.edgeColor, k.dst, k.protocol, k.port)
@@ -263,14 +265,14 @@ func ParseNetworkData(sd_olds, sd_news []*SummaryData, appName string) *VisualNe
 		}
 	}
 	// filter nsips by ips
-	for ns, ipss := range nsips_old {
+	for ns, ipss := range nsipsOld {
 		for _, ip := range ipss {
 			if _, ok := ips[ip]; ok {
 				vn.NsIps[ns] = append(vn.NsIps[ns], ip)
 			}
 		}
 	}
-	for ns, ipss := range nsips_new {
+	for ns, ipss := range nsipsNew {
 		for _, ip := range ipss {
 			if _, ok := ips[ip]; ok {
 				vn.NsIps[ns] = append(vn.NsIps[ns], ip)
@@ -382,14 +384,14 @@ func ConvertSysJSONToImage(jsonFile string, output string, appName string) error
 	// fmt.Printf("JSON: %+v", string(jsonData))
 	start := []byte("@startjson\n")
 	end := []byte("\n@endjson")
-	sys_puml := append(start, jsonData...)
-	sys_puml = append(sys_puml, end...)
-	// fmt.Printf("%+v\n", string(sys_puml))
+	sysPuml := append(start, jsonData...)
+	sysPuml = append(sysPuml, end...)
+	// fmt.Printf("%+v\n", string(sysPuml))
 
 	klog.Infoln("Creating PlantUML File...")
 	// Create plantuml file
 	fw := osi.NewFileWriter(PWD + "/sys.puml")
-	err = fw.WriteFile(sys_puml)
+	err = fw.WriteFile(sysPuml)
 	if err != nil {
 		return err
 	}
@@ -402,7 +404,7 @@ func ConvertSysJSONToImage(jsonFile string, output string, appName string) error
 	}
 
 	klog.Infoln("Removing PlantUML File...")
-	err = osi.RemoceFile(PWD + "/sys.puml")
+	err = osi.RemoveFile(PWD + "/sys.puml")
 	if err != nil {
 		return err
 	}
@@ -415,7 +417,7 @@ func ConvertSysJSONToImage(jsonFile string, output string, appName string) error
 }
 
 // ConvertNetworkJSONToImage converts the summary network JSON data to a plantuml image
-func ConvertNetworkJSONToImage(jsonFile_old string, jsonFile_new string, output string, appName string) error {
+func ConvertNetworkJSONToImage(jsonFileOld string, jsonFileNew string, output string, appName string) error {
 	klog.Info("Cheking Dependencies...")
 	// Check if java is installed
 	_, b := exe.CheckCmdIsExist("java")
@@ -430,21 +432,21 @@ func ConvertNetworkJSONToImage(jsonFile_old string, jsonFile_new string, output 
 
 	// get old summary data from old json file
 	klog.Infoln("Parsing Old Summary Data...")
-	sd_olds := ParseSummaryData(jsonFile_old)
-	if sd_olds == nil {
+	sdOlds := ParseSummaryData(jsonFileOld)
+	if sdOlds == nil {
 		return fmt.Errorf("Error: Old SummaryData is nil")
 	}
 
 	// get new summary data from new json file
 	klog.Infoln("Parsing New Summary Data...")
-	sd_news := ParseSummaryData(jsonFile_new)
-	if sd_news == nil {
+	sdNews := ParseSummaryData(jsonFileNew)
+	if sdNews == nil {
 		return fmt.Errorf("Error: New SummaryData is nil")
 	}
 
 	// parse visual network connections data from summary data
 	klog.Infoln("Parsing Visual Network Connections Data...")
-	vnd := ParseNetworkData(sd_olds, sd_news, appName)
+	vnd := ParseNetworkData(sdOlds, sdNews, appName)
 	if vnd == nil {
 		return fmt.Errorf("Error: VisualNetworkData is nil")
 	}
@@ -464,7 +466,7 @@ func ConvertNetworkJSONToImage(jsonFile_old string, jsonFile_new string, output 
 	}
 
 	klog.Infoln("Removing PlantUML File...")
-	err = osi.RemoceFile(PWD + "/net.puml")
+	err = osi.RemoveFile(PWD + "/net.puml")
 	if err != nil {
 		return err
 	}
