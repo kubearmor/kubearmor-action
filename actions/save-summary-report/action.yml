@@ -25,7 +25,7 @@ runs:
     - name: Get summary report
       run: |
         echo ${PWD}
-        karmor summary -n ${{ inputs.namespace }} -o json > ${{ inputs.file }} && cat ${{ inputs.file }}
+        karmor summary -n ${{ inputs.namespace }} --agg -o json > ${{ inputs.file }} && cat ${{ inputs.file }}
       shell: bash
     - name: Upload summary report
       id: upload-summary-report
