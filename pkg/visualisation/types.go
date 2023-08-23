@@ -65,7 +65,7 @@ type VisualSysData struct {
 	AppName     string                       `json:"AppName"`
 	Labels      []string                     `json:"Labels,omitempty"`
 	ProcessData map[string]map[string]string `json:"Process,omitempty"`
-	FileData    map[string]string            `json:"File,omitempty"`
+	FileData    map[string]map[string]string `json:"File,omitempty"`
 	NetworkData map[string]map[string]string `json:"Network,omitempty"`
 }
 

@@ -68,7 +68,7 @@ func ParseSysData(summaryDatas []*SummaryData, appName string) *VisualSysData {
 		Labels:    make([]string, 0),
 	}
 	vs.ProcessData = make(map[string]map[string]string)
-	vs.FileData = make(map[string]string)
+	vs.FileData = make(map[string]map[string]string)
 	vs.NetworkData = make(map[string]map[string]string)
 	for _, sd := range summaryDatas {
 		// filter by appName
@@ -104,8 +104,11 @@ func handlePsfileSet(summaryData *SummaryData, vs *VisualSysData, kind string) {
 			vs.ProcessData[ps.Source][ps.Destination] = "o"
 		}
 	} else if kind == "File" {
-		for _, file := range summaryData.FileData {
-			vs.FileData[file.Destination] = "o"
+		for _, filedata := range summaryData.FileData {
+			if _, ok := vs.FileData[filedata.Source]; !ok {
+				vs.FileData[filedata.Source] = make(map[string]string)
+			}
+			vs.FileData[filedata.Source][filedata.Destination] = "o"
 		}
 	}
 }
