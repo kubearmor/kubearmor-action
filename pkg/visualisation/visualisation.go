@@ -13,6 +13,7 @@ import (
 	"github.com/kubearmor/kubearmor-action/utils"
 	exe "github.com/kubearmor/kubearmor-action/utils/exec"
 	osi "github.com/kubearmor/kubearmor-action/utils/os"
+	"github.com/sethvargo/go-githubactions"
 	"k8s.io/klog"
 )
 
@@ -149,7 +150,7 @@ func ConvertVndToPlantUML(vnd *VisualNetworkData, appName string) error {
 		}
 		for _, ip := range ips {
 			color := "Lightblue"
-			if strings.Contains(ip, appName) {
+			if appName != "" && strings.Contains(ip, appName) {
 				color = "Orange"
 			}
 			_, err = file.WriteString(fmt.Sprintf("[%s] #%s\n", ip, color))
@@ -207,6 +208,38 @@ func ParseNetworkData(sdOlds, sdNews []*SummaryData, appName string) *VisualNetw
 
 	vn := &VisualNetworkData{}
 	vn.NsIps = make(map[string][]string)
+	// if sdOlds == nil || len(sdOlds) == 0
+	if sdOlds == nil || len(sdOlds) == 0 {
+		for _, sdNew := range sdNews {
+			// Get Namespace Labels
+			getNsIps(sdNew, nsipsNew)
+			// Get Different Network Connections
+			getDiffConnectionData(sdNew, cdsNew, appName)
+		}
+
+		// merge the connections
+		for k, v := range cdsNew {
+			// unchanged
+			if v.kind == 0 {
+				edge := fmt.Sprintf("[%s] -[#%s]-> [%s] : %s/%s\n", k.src, v.edgeColor, k.dst, k.protocol, k.port)
+				vn.Connections = append(vn.Connections, edge)
+			}
+			// add ips to the ips map, to filter nsips
+			ips[k.src] = true
+			ips[k.dst] = true
+		}
+
+		// filter nsips by ips
+		for ns, ipss := range nsipsNew {
+			for _, ip := range ipss {
+				if _, ok := ips[ip]; ok {
+					vn.NsIps[ns] = append(vn.NsIps[ns], ip)
+				}
+			}
+		}
+		return vn
+	}
+	// if sdOlds != nil && len(sdOlds) != 0
 	for _, sdOld := range sdOlds {
 		// Get Namespace Labels
 		getNsIps(sdOld, nsipsOld)
@@ -431,12 +464,15 @@ func ConvertNetworkJSONToImage(jsonFileOld string, jsonFileNew string, output st
 	}
 
 	// get old summary data from old json file
-	klog.Infoln("Parsing Old Summary Data...")
-	sdOlds := ParseSummaryData(jsonFileOld)
-	if sdOlds == nil {
-		return fmt.Errorf("Error: Old SummaryData is nil")
+	var sdOlds []*SummaryData
+	if jsonFileOld != "" {
+		klog.Infoln("Parsing Old Summary Data...")
+		sdOlds = ParseSummaryData(jsonFileOld)
+		// handle nil
+		if sdOlds == nil {
+			githubactions.Warningf("Warning: Old summary report file path is invalid!")
+		}
 	}
-
 	// get new summary data from new json file
 	klog.Infoln("Parsing New Summary Data...")
 	sdNews := ParseSummaryData(jsonFileNew)

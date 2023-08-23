@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+
+	"k8s.io/klog"
 )
 
 // URLVisitor downloads the contents of a URL, and if successful, returns
@@ -82,6 +84,12 @@ func ReadJSONFromURL(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer func() {
+		// recover from panic if one occured.
+		if r := recover(); r != nil {
+			klog.Warningf("Recovered in ReadJSONFromURL: %v\n", r)
+		}
+	}()
 	defer body.Close()
 	data, err := io.ReadAll(body)
 	if err != nil {
