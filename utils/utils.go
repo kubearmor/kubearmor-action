@@ -91,6 +91,11 @@ func ReadFile(address string) ([]byte, error) {
 
 // CheckIsURL checks if the given address is a url
 func CheckIsURL(address string) bool {
+	// Check if the address is a valid url
+	_, err := url.ParseRequestURI(address)
+	if err != nil {
+		return false
+	}
 	// Parse the address as a url
 	u, err := url.Parse(address)
 	if err != nil {
