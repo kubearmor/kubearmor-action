@@ -83,7 +83,7 @@ jobs:
           GOPATH: ${{ runner.workspace }}
           GO111MODULE: "on"
       # Checkout to your repo
-      - name: Checkout
+      - name: Checkout to your repo
         uses: actions/checkout@v3
       # Install k3s cluster(You can setup a k8s cluster here)
       - name: Setup k3s cluster
@@ -157,25 +157,32 @@ jobs:
         with:
           name: ${{ steps.visualisation.outputs.visualisation-results-artifact }}
           path: images
+      # Checkout to fork repo
+      - name: Checkout to fork repo
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.pull_request.user.login }}/${{ github.event.repository.name }}
       # Store the latest summary report file
       - name: Store the latest summary report file
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          deploy_key: ${{ secrets.PERSONAL_TOKEN }}
+          external_repository: ${{ github.event.pull_request.user.login }}/${{ github.event.repository.name }}
           publish_dir: ./summary_reports
           keep_files: true
       # Store the visualisation results
       - name: Store the visualisation results
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          deploy_key: ${{ secrets.PERSONAL_TOKEN }}
+          external_repository: ${{ github.event.pull_request.user.login }}/${{ github.event.repository.name }}
           publish_dir: ./images
           keep_files: true
       # Comment the visualisation results on the PR
       - name: Comment on PR
         run: |
-          gh pr comment  ${{ github.event.number }} -b"![system_graph](https://raw.githubusercontent.com/${{ github.repository }}/gh-pages/${{ steps.visualisation.outputs.sys-visualisation-image }})"
-          gh pr comment  ${{ github.event.number }} -b"![network_graph](https://raw.githubusercontent.com/${{ github.repository }}/gh-pages/${{ steps.visualisation.outputs.network-visualisation-image }})"
+          gh pr comment  ${{ github.event.number }} -b"![system_graph](https://raw.githubusercontent.com/${{ github.event.pull_request.user.login }}/${{ github.event.repository.name }}/gh-pages/${{ steps.visualisation.outputs.sys-visualisation-image }})"
+          gh pr comment  ${{ github.event.number }} -b"![network_graph](https://raw.githubusercontent.com/${{ github.event.pull_request.user.login }}/${{ github.event.repository.name }}/gh-pages/${{ steps.visualisation.outputs.network-visualisation-image }})"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Delete the new app
